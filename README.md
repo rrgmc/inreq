@@ -1,4 +1,5 @@
 # inreq - Golang http request to struct
+[![GoDoc](https://godoc.org/github.com/RangelReale/inreq?status.png)](https://godoc.org/github.com/RangelReale/inreq)
 
 ```go
 import (
