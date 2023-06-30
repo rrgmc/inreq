@@ -77,3 +77,8 @@ func extractOptions[T Option](options []Option) []T {
 	}
 	return ret
 }
+
+// concatOptionsBefore returns an array with "options" before "source".
+func concatOptionsBefore[T Option](source []T, options ...T) []T {
+	return append(append([]T{}, options...), source...)
+}

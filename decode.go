@@ -14,7 +14,7 @@ type Decoder struct {
 
 // NewDecoder creates a Decoder instance with the default decode operations (query, path, header, form, body).
 func NewDecoder(options ...DefaultOption) *Decoder {
-	return NewCustomDecoder(append(append([]DefaultOption{}, WithDefaultDecodeOperations()), options...)...)
+	return NewCustomDecoder(concatOptionsBefore[DefaultOption](options, WithDefaultDecodeOperations())...)
 }
 
 // NewCustomDecoder creates a Decoder instance without any decode operations. At least one must be added for
@@ -51,7 +51,10 @@ func (d *Decoder) Decode(r *http.Request, data any, options ...DecodeOption) err
 // Decode decodes the http request to the struct passed in "data" using NewDecoder.
 // Any map tags set using WithMapTags will be considered as "default" map tags. (see WithDefaultMapTags for details).
 func Decode(r *http.Request, data any, options ...Option) error {
-	options = append(append([]Option{}, withUseDecodeMapTagsAsDefault(true), WithDefaultDecodeOperations()), options...)
+	options = concatOptionsBefore[Option](options,
+		withUseDecodeMapTagsAsDefault(true),
+		WithDefaultDecodeOperations(),
+	)
 	return NewDecoder(extractOptions[DefaultOption](options)...).Decode(r, data,
 		extractOptions[DecodeOption](options)...)
 }
@@ -59,7 +62,9 @@ func Decode(r *http.Request, data any, options ...Option) error {
 // CustomDecode decodes the http request to the struct passed in "data" using NewCustomDecoder.
 // Any map tags set using WithMapTags will be considered as "default" map tags. (see WithDefaultMapTags for details).
 func CustomDecode(r *http.Request, data any, options ...Option) error {
-	options = append(append([]Option{}, withUseDecodeMapTagsAsDefault(true)), options...)
+	options = concatOptionsBefore[Option](options,
+		withUseDecodeMapTagsAsDefault(true),
+	)
 	return NewDecoder(extractOptions[DefaultOption](options)...).Decode(r, data,
 		extractOptions[DecodeOption](options)...)
 }
