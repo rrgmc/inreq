@@ -34,7 +34,7 @@ func (d *decodeOptions) apply(options ...DecodeOption) {
 
 func defaultDefaultOptions() defaultOptions {
 	ret := defaultOptions{
-		options:              instruct.DefaultDefaultOptions[*http.Request, DecodeContext](),
+		options:              instruct.NewDefaultOptions[*http.Request, DecodeContext](),
 		sliceSplitSeparator:  ",",
 		defaultDecodeOptions: defaultDecodeOptions(),
 	}
@@ -44,7 +44,7 @@ func defaultDefaultOptions() defaultOptions {
 
 func defaultDecodeOptions() decodeOptions {
 	return decodeOptions{
-		options:       instruct.DefaultDecodeOptions[*http.Request, DecodeContext](),
+		options:       instruct.NewDecodeOptions[*http.Request, DecodeContext](),
 		allowReadBody: true,
 	}
 }
