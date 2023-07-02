@@ -1,10 +1,7 @@
 package inreq
 
 import (
-	"net/http"
 	"reflect"
-
-	"github.com/RangelReale/instruct"
 )
 
 // WithTagName sets the tag name to check on structs. The default is "inreq".
@@ -78,25 +75,21 @@ func WithResolver(resolver Resolver) DefaultOption {
 // Decode, CustomDecode, DecodeType and CustomDecodeType.
 func WithDefaultMapTags(dataForType any, tags MapTags) DefaultOption {
 	return defaultOptionFunc(func(o *defaultOptions) {
-		o.options.MapTags.Set(reflectElem(reflect.TypeOf(dataForType)), tags)
+		o.options.DefaultMapTagsSet(reflectElem(reflect.TypeOf(dataForType)), tags)
 	})
 }
 
 // WithDefaultMapTagsType is the same as WithDefaultMapTags using a reflect.Type.
 func WithDefaultMapTagsType(typ reflect.Type, tags MapTags) DefaultOption {
 	return defaultOptionFunc(func(o *defaultOptions) {
-		o.options.MapTags.Set(reflectElem(typ), tags)
+		o.options.DefaultMapTagsSet(reflectElem(typ), tags)
 	})
 }
 
 // WithStructInfoCache sets whether to cache info for structs on parse. Default is false.
 func WithStructInfoCache(cache bool) DefaultOption {
 	return defaultOptionFunc(func(o *defaultOptions) {
-		if cache {
-			o.options.StructInfoProvider = &instruct.CachedStructInfoProvider[*http.Request, DecodeContext]{}
-		} else {
-			o.options.StructInfoProvider = &instruct.DefaultStructInfoProvider[*http.Request, DecodeContext]{}
-		}
+		o.options.StructInfoCache(cache)
 	})
 }
 
