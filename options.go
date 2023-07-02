@@ -75,14 +75,14 @@ func WithResolver(resolver Resolver) DefaultOption {
 // Decode, CustomDecode, DecodeType and CustomDecodeType.
 func WithDefaultMapTags(dataForType any, tags MapTags) DefaultOption {
 	return defaultOptionFunc(func(o *defaultOptions) {
-		o.options.DefaultMapTagsSet(reflectElem(reflect.TypeOf(dataForType)), tags)
+		o.options.DefaultMapTagsSet(reflect.TypeOf(dataForType), tags)
 	})
 }
 
 // WithDefaultMapTagsType is the same as WithDefaultMapTags using a reflect.Type.
 func WithDefaultMapTagsType(typ reflect.Type, tags MapTags) DefaultOption {
 	return defaultOptionFunc(func(o *defaultOptions) {
-		o.options.DefaultMapTagsSet(reflectElem(typ), tags)
+		o.options.DefaultMapTagsSet(typ, tags)
 	})
 }
 
