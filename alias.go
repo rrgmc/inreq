@@ -9,6 +9,9 @@ type MapTags = instruct.MapTags
 
 // error.go
 
-type ValuesNotUsedError = instruct.ValuesNotUsedError
-
-type InvalidDecodeError = instruct.InvalidDecodeError
+type (
+	ValuesNotUsedError         = instruct.ValuesNotUsedError
+	InvalidDecodeError         = instruct.InvalidDecodeError
+	RequiredError              = instruct.RequiredError
+	OperationNotSupportedError = instruct.OperationNotSupportedError
+)
