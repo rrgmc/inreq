@@ -348,13 +348,13 @@ func TestDecodeBody(t *testing.T) {
 				B struct {
 					_   StructOption `inreq:"body"`
 					Val string
-				} `inreq:"recurse"`
+				}
 			}{},
 			want: &struct {
 				B struct {
 					_   StructOption `inreq:"body"`
 					Val string
-				} `inreq:"recurse"`
+				}
 			}{
 				B: struct {
 					_   StructOption `inreq:"body"`
