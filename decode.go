@@ -23,12 +23,10 @@ func NewCustomDecoder(options ...DefaultOption) *Decoder {
 	optns := defaultDefaultOptions()
 	optns.apply(options...)
 
-	ret := &Decoder{
+	return &Decoder{
 		dec:            instruct.NewDecoder[*http.Request, DecodeContext](optns.options),
-		defaultOptions: defaultDefaultOptions(),
+		defaultOptions: optns,
 	}
-	ret.defaultOptions.apply(options...)
-	return ret
 }
 
 // Decode decodes the http request to the struct passed in "data".
