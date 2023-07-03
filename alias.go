@@ -1,6 +1,9 @@
 package inreq
 
-import "github.com/RangelReale/instruct"
+import (
+	"github.com/RangelReale/instruct"
+	"github.com/RangelReale/instruct/types"
+)
 
 // map_tags.go
 
@@ -10,8 +13,8 @@ type MapTags = instruct.MapTags
 // error.go
 
 type (
-	ValuesNotUsedError         = instruct.ValuesNotUsedError
-	InvalidDecodeError         = instruct.InvalidDecodeError
-	RequiredError              = instruct.RequiredError
-	OperationNotSupportedError = instruct.OperationNotSupportedError
+	ValuesNotUsedError         = types.ValuesNotUsedError
+	InvalidDecodeError         = types.InvalidDecodeError
+	RequiredError              = types.RequiredError
+	OperationNotSupportedError = types.OperationNotSupportedError
 )
