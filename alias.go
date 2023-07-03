@@ -13,8 +13,10 @@ type MapTags = instruct.MapTags
 // error.go
 
 var (
-	ErrCoerce        = types.ErrCoerce
-	ErrCoerceUnknown = types.ErrCoerceUnknown
+	ErrCoerceInvalid     = types.ErrCoerceInvalid
+	ErrCoerceOverflow    = types.ErrCoerceOverflow
+	ErrCoerceUnsupported = types.ErrCoerceUnsupported
+	ErrCoerceUnknown     = types.ErrCoerceUnknown
 )
 
 type (
