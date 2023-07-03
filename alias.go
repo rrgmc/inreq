@@ -12,6 +12,11 @@ type MapTags = instruct.MapTags
 
 // error.go
 
+var (
+	ErrCoerce        = types.ErrCoerce
+	ErrCoerceUnknown = types.ErrCoerceUnknown
+)
+
 type (
 	ValuesNotUsedError         = types.ValuesNotUsedError
 	InvalidDecodeError         = types.InvalidDecodeError
