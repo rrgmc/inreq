@@ -14,7 +14,7 @@ func TestDecodeForm(t *testing.T) {
 		form    [][]string
 		data    interface{}
 		want    interface{}
-		options []Option
+		options []AnyOption
 		wantErr bool
 	}{
 		{
@@ -68,7 +68,7 @@ func TestDecodeForm(t *testing.T) {
 				Val string `inreq:"form"`
 			}{},
 			wantErr: true,
-			options: []Option{
+			options: []AnyOption{
 				WithEnsureAllFormUsed(true),
 			},
 		},
@@ -103,7 +103,7 @@ func TestDecodeForm(t *testing.T) {
 			}{
 				Val: "x1",
 			},
-			options: []Option{
+			options: []AnyOption{
 				WithMapTags(map[string]any{
 					"Val": "form",
 				}),
@@ -116,7 +116,7 @@ func TestDecodeForm(t *testing.T) {
 				Val string
 			}{},
 			wantErr: true,
-			options: []Option{
+			options: []AnyOption{
 				WithMapTags(map[string]any{
 					"Val":     "form",
 					"NOTUSED": "nothing",
@@ -138,7 +138,7 @@ func TestDecodeForm(t *testing.T) {
 				}
 			}
 
-			options := append(append([]Option{}, tt.options...),
+			options := append(append([]AnyOption{}, tt.options...),
 				WithDecodeOperation(OperationForm, &DecodeOperationForm{}),
 			)
 

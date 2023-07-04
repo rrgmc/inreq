@@ -14,7 +14,7 @@ func TestDecodeQuery(t *testing.T) {
 		query   [][2]string
 		data    interface{}
 		want    interface{}
-		options []Option
+		options []AnyOption
 		wantErr bool
 	}{
 		{
@@ -68,7 +68,7 @@ func TestDecodeQuery(t *testing.T) {
 				Val string `inreq:"query"`
 			}{},
 			wantErr: true,
-			options: []Option{
+			options: []AnyOption{
 				WithEnsureAllQueryUsed(true),
 			},
 		},
@@ -103,7 +103,7 @@ func TestDecodeQuery(t *testing.T) {
 			}{
 				Val: "x1",
 			},
-			options: []Option{
+			options: []AnyOption{
 				WithMapTags(map[string]any{
 					"Val": "query",
 				}),
@@ -116,7 +116,7 @@ func TestDecodeQuery(t *testing.T) {
 				Val string
 			}{},
 			wantErr: true,
-			options: []Option{
+			options: []AnyOption{
 				WithMapTags(map[string]any{
 					"Val":     "query",
 					"NOTUSED": "nothing",
@@ -135,7 +135,7 @@ func TestDecodeQuery(t *testing.T) {
 			}
 			r.URL.RawQuery = q.Encode()
 
-			options := append(append([]Option{}, tt.options...),
+			options := append(append([]AnyOption{}, tt.options...),
 				WithDecodeOperation(OperationQuery, &DecodeOperationQuery{}),
 			)
 

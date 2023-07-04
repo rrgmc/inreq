@@ -17,7 +17,7 @@ func TestDecodeBody(t *testing.T) {
 		body             string
 		data             interface{}
 		want             interface{}
-		options          []Option
+		options          []AnyOption
 		wantErr          bool
 		wantCompareError bool
 	}{
@@ -103,7 +103,7 @@ func TestDecodeBody(t *testing.T) {
 			}{
 				Val: "x1",
 			},
-			options: []Option{
+			options: []AnyOption{
 				WithMapTags(map[string]any{
 					StructOptionMapTag: "body",
 				}),
@@ -138,7 +138,7 @@ func TestDecodeBody(t *testing.T) {
 				} `inreq:"body"`
 			}{},
 			wantErr: true,
-			options: []Option{
+			options: []AnyOption{
 				WithAllowReadBody(false),
 			},
 		},
@@ -308,7 +308,7 @@ func TestDecodeBody(t *testing.T) {
 					Val: "x1",
 				},
 			},
-			options: []Option{
+			options: []AnyOption{
 				WithMapTags(map[string]any{
 					"B": "body",
 				}),
@@ -334,7 +334,7 @@ func TestDecodeBody(t *testing.T) {
 				},
 			},
 			wantErr: true,
-			options: []Option{
+			options: []AnyOption{
 				WithMapTags(map[string]any{
 					"B":       "body",
 					"NOTUSED": "nothing",
@@ -379,7 +379,7 @@ func TestDecodeBody(t *testing.T) {
 				r.Header.Add("Content-Type", "application/json")
 			}
 
-			options := append(append([]Option{}, tt.options...),
+			options := append(append([]AnyOption{}, tt.options...),
 				WithDecodeOperation(OperationBody, &DecodeOperationBody{}),
 			)
 			if len(tt.headers) > 0 {

@@ -17,10 +17,12 @@ type (
 	TypeDefaultOption = options.TypeDefaultOption[*http.Request, DecodeContext, typeDefaultOptions]
 	TypeDecodeOption  = options.TypeDecodeOption[*http.Request, DecodeContext, decodeOptions]
 
-	DefaultAndTypeDefaultOption = options.DefaultAndTypeDefaultOption[*http.Request, DecodeContext, defaultOptions, typeDefaultOptions]
-	DefaultAndDecodeOption      = options.DefaultAndDecodeOption[*http.Request, DecodeContext, defaultOptions, decodeOptions]
-	TypeDefaultAndDecodeOption  = options.TypeDefaultAndDecodeOption[*http.Request, DecodeContext, typeDefaultOptions, decodeOptions]
-	FullOption                  = options.FullOption[*http.Request, DecodeContext, defaultOptions, typeDefaultOptions, decodeOptions, decodeOptions]
+	DefaultAndTypeDefaultOption       = options.DefaultAndTypeDefaultOption[*http.Request, DecodeContext, defaultOptions, typeDefaultOptions]
+	DefaultAndDecodeOption            = options.DefaultAndDecodeOption[*http.Request, DecodeContext, defaultOptions, decodeOptions]
+	TypeDefaultAndTypeDecodeOption    = options.TypeDefaultAndTypeDecodeOption[*http.Request, DecodeContext, typeDefaultOptions, decodeOptions]
+	DefaultAndTypeDefaultDecodeOption = options.DefaultAndTypeDefaultDecodeOption[*http.Request, DecodeContext, decodeOptions, decodeOptions]
+	TypeDefaultAndDecodeOption        = options.TypeDefaultAndDecodeOption[*http.Request, DecodeContext, typeDefaultOptions, decodeOptions]
+	FullOption                        = options.FullOption[*http.Request, DecodeContext, defaultOptions, typeDefaultOptions, decodeOptions, decodeOptions]
 )
 
 // PathValue is used by the "path" operation to extract the path from the request. Usually this is stored

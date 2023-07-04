@@ -53,6 +53,12 @@ func (d *decodeOptions) apply(options ...DecodeOption) {
 	}
 }
 
+func (d *decodeOptions) applyType(options ...TypeDecodeOption) {
+	for _, opt := range options {
+		opt.ApplyTypeDecodeOption(d)
+	}
+}
+
 func defaultSharedDefaultOptions() sharedDefaultOptions {
 	ret := sharedDefaultOptions{
 		sliceSplitSeparator:  ",",
@@ -119,6 +125,14 @@ func defaultAndTypeDefaultSharedOptionFunc(f func(o *sharedDefaultOptions)) Defa
 		f(&o.sharedDefaultOptions)
 	}, func(o *typeDefaultOptions) {
 		f(&o.sharedDefaultOptions)
+	})
+}
+
+func typeAndTypeDecodeOptionFunc(tf func(o *typeDefaultOptions), cf func(o *decodeOptions)) TypeDefaultAndTypeDecodeOption {
+	return options.TypeDefaultAndTypeDecodeOptionFunc[*http.Request, DecodeContext, typeDefaultOptions, decodeOptions](func(o *typeDefaultOptions) {
+		tf(o)
+	}, func(o *decodeOptions) {
+		cf(o)
 	})
 }
 

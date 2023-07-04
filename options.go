@@ -44,7 +44,7 @@ func WithPathValue(pathValue PathValue) DefaultOption {
 
 // WithDefaultDecodeOperations adds the default operations (query, path, header, form and body).
 // If the non-"Custom" calls are used, this option is added by default.
-func WithDefaultDecodeOperations() DefaultOption {
+func WithDefaultDecodeOperations() DefaultAndTypeDefaultOption {
 	return defaultAndTypeDefaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
 		o.DecodeOperations[OperationQuery] = &DecodeOperationQuery{}
 		o.DecodeOperations[OperationPath] = &DecodeOperationPath{}

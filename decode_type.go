@@ -33,7 +33,7 @@ func NewCustomTypeDecoder[T any](options ...TypeDefaultOption) *TypeDecoder[T] {
 // Decode decodes the http request to the struct passed in "data".
 func (d *TypeDecoder[T]) Decode(r *http.Request, options ...TypeDecodeOption) (T, error) {
 	optns := defaultDecodeOptions()
-	optns.apply(options...)
+	optns.applyType(options...)
 
 	optns.options.Ctx = &decodeContext{
 		DefaultDecodeContext: instruct.NewDefaultDecodeContext(d.defaultOptions.options.FieldNameMapper),

@@ -14,7 +14,7 @@ func TestDecodePath(t *testing.T) {
 		pathValues [][2]string
 		data       interface{}
 		want       interface{}
-		options    []Option
+		options    []AnyOption
 		wantErr    bool
 	}{
 		{
@@ -88,7 +88,7 @@ func TestDecodePath(t *testing.T) {
 			}{
 				Val: "x1",
 			},
-			options: []Option{
+			options: []AnyOption{
 				WithMapTags(map[string]any{
 					"Val": "path",
 				}),
@@ -101,7 +101,7 @@ func TestDecodePath(t *testing.T) {
 				Val string
 			}{},
 			wantErr: true,
-			options: []Option{
+			options: []AnyOption{
 				WithMapTags(map[string]any{
 					"Val":     "path",
 					"NOTUSED": "nothing",
@@ -115,7 +115,7 @@ func TestDecodePath(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			r := httptest.NewRequest(http.MethodPost, "/", nil)
 
-			options := append(append([]Option{}, tt.options...),
+			options := append(append([]AnyOption{}, tt.options...),
 				WithDecodeOperation(OperationPath, &DecodeOperationPath{}),
 				WithPathValue(PathValueFunc(func(r *http.Request, name string) (found bool, value any, err error) {
 					for _, qvalue := range tt.pathValues {
