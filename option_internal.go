@@ -87,8 +87,6 @@ func defaultDecodeOptions() decodeOptions {
 
 // helpers
 
-// DefaultOption -> instruct.DefaultOptions
-
 func defaultOptionFunc(f func(o *instruct.DefaultOptions[*http.Request, DecodeContext])) DefaultOption {
 	return options.DefaultOptionFunc[*http.Request, DecodeContext, defaultOptions, typeDefaultOptions](func(o *defaultOptions) {
 		f(&o.options)
