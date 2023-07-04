@@ -4,36 +4,17 @@ import (
 	"net/http"
 
 	"github.com/RangelReale/instruct"
+	"github.com/RangelReale/instruct/options"
 )
 
-type Option interface {
-	isOption()
-}
-
-type DefaultOption interface {
-	TypeDefaultOption
-	applyDefaultOption(*defaultOptions)
-}
-
-type TypeDefaultOption interface {
-	Option
-	applyTypeDefaultOption(*typeDefaultOptions)
-}
-
-type DecodeOption interface {
-	Option
-	applyDecodeOption(*decodeOptions)
-}
-
-type TypeDefaultAndDecodeOption interface {
-	TypeDefaultOption
-	DecodeOption
-}
-
-type FullOption interface {
-	DefaultOption
-	DecodeOption
-}
+type (
+	Option                     = options.Option[*http.Request, DecodeContext]
+	DefaultOption              = options.DefaultOption[*http.Request, DecodeContext, defaultOptions, typeDefaultOptions]
+	TypeDefaultOption          = options.TypeDefaultOption[*http.Request, DecodeContext, typeDefaultOptions]
+	DecodeOption               = options.DecodeOption[*http.Request, DecodeContext, decodeOptions]
+	TypeDefaultAndDecodeOption = options.TypeDefaultAndDecodeOption[*http.Request, DecodeContext, typeDefaultOptions, decodeOptions]
+	FullOption                 = options.FullOption[*http.Request, DecodeContext, defaultOptions, typeDefaultOptions, decodeOptions]
+)
 
 // PathValue is used by the "path" operation to extract the path from the request. Usually this is stored
 // in the context by libraries like "gorilla/mux".

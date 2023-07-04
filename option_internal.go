@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/RangelReale/instruct"
+	"github.com/RangelReale/instruct/options"
 )
 
 const (
@@ -23,7 +24,7 @@ type defaultOptions struct {
 
 func (d *defaultOptions) apply(options ...DefaultOption) {
 	for _, opt := range options {
-		opt.applyDefaultOption(d)
+		opt.ApplyDefaultOption(d)
 	}
 }
 
@@ -34,7 +35,7 @@ type typeDefaultOptions struct {
 
 func (d *typeDefaultOptions) apply(options ...TypeDefaultOption) {
 	for _, opt := range options {
-		opt.applyTypeDefaultOption(d)
+		opt.ApplyTypeDefaultOption(d)
 	}
 }
 
@@ -47,7 +48,7 @@ type decodeOptions struct {
 
 func (d *decodeOptions) apply(options ...DecodeOption) {
 	for _, opt := range options {
-		opt.applyDecodeOption(d)
+		opt.ApplyDecodeOption(d)
 	}
 }
 
@@ -86,110 +87,51 @@ func defaultDecodeOptions() decodeOptions {
 
 // helpers
 
-// TypeDefaultOption
+// DefaultOption -> instruct.DefaultOptions
 
-type typeDefaultOptionFunc func(*typeDefaultOptions)
-
-func (f typeDefaultOptionFunc) isOption() {}
-
-func (f typeDefaultOptionFunc) applyTypeDefaultOption(o *typeDefaultOptions) {
-	f(o)
+func defaultOptionFunc(f func(o *instruct.DefaultOptions[*http.Request, DecodeContext])) DefaultOption {
+	return options.DefaultOptionFunc[*http.Request, DecodeContext, defaultOptions, typeDefaultOptions](func(o *defaultOptions) {
+		f(&o.options)
+	}, func(o *typeDefaultOptions) {
+		f(&o.options.DefaultOptions)
+	})
 }
 
-// DecodeOption
-
-type decodeOptionFunc func(*decodeOptions)
-
-func (f decodeOptionFunc) isOption() {}
-
-func (f decodeOptionFunc) applyDecodeOption(o *decodeOptions) {
-	f(o)
+func decodeOptionFunc(f func(o *decodeOptions)) DecodeOption {
+	return options.DecodeOptionFunc[*http.Request, DecodeContext, decodeOptions](func(o *decodeOptions) {
+		f(o)
+	})
 }
 
-// DefaultOption
-
-type defaultOptionImpl struct {
-	f func(o *instruct.DefaultOptions[*http.Request, DecodeContext])
+func defaultSharedOptionFunc(f func(o *sharedDefaultOptions)) DefaultOption {
+	return options.DefaultOptionFunc[*http.Request, DecodeContext, defaultOptions, typeDefaultOptions](func(o *defaultOptions) {
+		f(&o.sharedDefaultOptions)
+	}, func(o *typeDefaultOptions) {
+		f(&o.sharedDefaultOptions)
+	})
 }
 
-func (f defaultOptionImpl) isOption() {}
-
-func (f defaultOptionImpl) applyDefaultOption(o *defaultOptions) {
-	f.f(&o.options)
+func typeAndDecodeOptionFunc(tf func(o *typeDefaultOptions), cf func(o *decodeOptions)) TypeDefaultAndDecodeOption {
+	return options.TypeDefaultAndDecodeOptionFunc[*http.Request, DecodeContext, typeDefaultOptions, decodeOptions](func(o *typeDefaultOptions) {
+		tf(o)
+	}, func(o *decodeOptions) {
+		cf(o)
+	})
 }
 
-func (f defaultOptionImpl) applyTypeDefaultOption(o *typeDefaultOptions) {
-	f.f(&o.options.DefaultOptions)
+func fullSharedOptionFunc(def func(o *sharedDefaultOptions), dec func(o *decodeOptions)) FullOption {
+	return options.FullOptionFunc[*http.Request, DecodeContext, defaultOptions, typeDefaultOptions, decodeOptions](func(o *defaultOptions) {
+		def(&o.sharedDefaultOptions)
+	}, func(o *typeDefaultOptions) {
+		def(&o.sharedDefaultOptions)
+	}, func(o *decodeOptions) {
+		dec(o)
+	})
 }
 
-func defaultOptionFunc(f func(o *instruct.DefaultOptions[*http.Request, DecodeContext])) *defaultOptionImpl {
-	return &defaultOptionImpl{f}
-}
-
-// DefaultOption (shared)
-
-type defaultSharedOptionImpl struct {
-	f func(o *sharedDefaultOptions)
-}
-
-func (f defaultSharedOptionImpl) isOption() {}
-
-func (f defaultSharedOptionImpl) applyDefaultOption(o *defaultOptions) {
-	f.f(&o.sharedDefaultOptions)
-}
-
-func (f defaultSharedOptionImpl) applyTypeDefaultOption(o *typeDefaultOptions) {
-	f.f(&o.sharedDefaultOptions)
-}
-
-func defaultSharedOptionFunc(f func(o *sharedDefaultOptions)) *defaultSharedOptionImpl {
-	return &defaultSharedOptionImpl{f}
-}
-
-// typeAndDecodeOptions
-
-type typeAndDecodeOptionImpl struct {
-	t func(o *typeDefaultOptions)
-	d func(o *decodeOptions)
-}
-
-func (f typeAndDecodeOptionImpl) isOption() {}
-
-func (f typeAndDecodeOptionImpl) applyTypeDefaultOption(o *typeDefaultOptions) {
-	f.t(o)
-}
-
-func (f typeAndDecodeOptionImpl) applyDecodeOption(o *decodeOptions) {
-	f.d(o)
-}
-
-func typeAndDecodeOptionFunc(t func(o *typeDefaultOptions), d func(o *decodeOptions)) *typeAndDecodeOptionImpl {
-	return &typeAndDecodeOptionImpl{t, d}
-}
-
-// defaultAndTypeSharedFullOptions
-
-type fullSharedOptionImpl struct {
-	def func(o *sharedDefaultOptions)
-	dec func(o *decodeOptions)
-}
-
-func (f fullSharedOptionImpl) isOption() {}
-
-func (f fullSharedOptionImpl) applyDefaultOption(o *defaultOptions) {
-	f.def(&o.sharedDefaultOptions)
-}
-
-func (f fullSharedOptionImpl) applyTypeDefaultOption(o *typeDefaultOptions) {
-	f.def(&o.sharedDefaultOptions)
-}
-
-func (f fullSharedOptionImpl) applyDecodeOption(o *decodeOptions) {
-	f.dec(o)
-}
-
-func fullSharedOptionFunc(def func(o *sharedDefaultOptions), dec func(o *decodeOptions)) *fullSharedOptionImpl {
-	return &fullSharedOptionImpl{def, dec}
+// concatOptionsBefore returns an array with "options" before "source".
+func concatOptionsBefore[T Option](source []T, options ...T) []T {
+	return append(append([]T{}, options...), source...)
 }
 
 // extractOptions extracts only options of a specific type.
@@ -201,9 +143,4 @@ func extractOptions[T Option](options []Option) []T {
 		}
 	}
 	return ret
-}
-
-// concatOptionsBefore returns an array with "options" before "source".
-func concatOptionsBefore[T Option](source []T, options ...T) []T {
-	return append(append([]T{}, options...), source...)
 }
