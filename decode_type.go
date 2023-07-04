@@ -9,18 +9,18 @@ import (
 // TypeDecoder decodes http requests to structs.
 type TypeDecoder[T any] struct {
 	dec            *instruct.TypeDecoder[*http.Request, DecodeContext, T]
-	defaultOptions defaultOptions
+	defaultOptions typeDefaultOptions
 }
 
 // NewTypeDecoder creates a Decoder instance with the default decode operations (query, path, header, form, body).
-func NewTypeDecoder[T any](options ...DefaultOption) *TypeDecoder[T] {
-	return NewCustomTypeDecoder[T](concatOptionsBefore[DefaultOption](options, WithDefaultDecodeOperations())...)
+func NewTypeDecoder[T any](options ...TypeDefaultOption) *TypeDecoder[T] {
+	return NewCustomTypeDecoder[T](concatOptionsBefore[TypeDefaultOption](options, WithDefaultDecodeOperations())...)
 }
 
 // NewCustomTypeDecoder creates a Decoder instance without any decode operations. At least one must be added for
 // decoding to work.
-func NewCustomTypeDecoder[T any](options ...DefaultOption) *TypeDecoder[T] {
-	optns := defaultDefaultOptions()
+func NewCustomTypeDecoder[T any](options ...TypeDefaultOption) *TypeDecoder[T] {
+	optns := defaultTypeDefaultOptions()
 	optns.apply(options...)
 
 	return &TypeDecoder[T]{
@@ -50,19 +50,15 @@ func (d *TypeDecoder[T]) Decode(r *http.Request, options ...DecodeOption) (T, er
 // Any map tags set using WithMapTags will be considered as "default" map tags. (see WithDefaultMapTags for details).
 func DecodeType[T any](r *http.Request, options ...Option) (T, error) {
 	options = concatOptionsBefore[Option](options,
-		withUseDecodeMapTagsAsDefault(true),
 		WithDefaultDecodeOperations(),
 	)
-	return NewTypeDecoder[T](extractOptions[DefaultOption](options)...).Decode(r,
+	return NewTypeDecoder[T](extractOptions[TypeDefaultOption](options)...).Decode(r,
 		extractOptions[DecodeOption](options)...)
 }
 
 // CustomDecodeType decodes the http request to the struct passed in "data" using NewCustomDecoder.
 // Any map tags set using WithMapTags will be considered as "default" map tags. (see WithDefaultMapTags for details).
 func CustomDecodeType[T any](r *http.Request, options ...Option) (T, error) {
-	options = concatOptionsBefore[Option](options,
-		withUseDecodeMapTagsAsDefault(true),
-	)
-	return NewTypeDecoder[T](extractOptions[DefaultOption](options)...).Decode(r,
+	return NewTypeDecoder[T](extractOptions[TypeDefaultOption](options)...).Decode(r,
 		extractOptions[DecodeOption](options)...)
 }

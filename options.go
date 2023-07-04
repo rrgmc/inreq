@@ -1,40 +1,43 @@
 package inreq
 
 import (
+	"net/http"
 	"reflect"
+
+	"github.com/RangelReale/instruct"
 )
 
 // WithTagName sets the tag name to check on structs. The default is "inreq".
 func WithTagName(tagName string) DefaultOption {
-	return defaultOptionFunc(func(o *defaultOptions) {
-		o.options.TagName = tagName
+	return defaultAndTypeOptionsFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
+		o.TagName = tagName
 	})
 }
 
 // WithDefaultRequired sets whether the default for fields should be "required" or "not required"
 func WithDefaultRequired(defaultRequired bool) DefaultOption {
-	return defaultOptionFunc(func(o *defaultOptions) {
-		o.options.DefaultRequired = defaultRequired
+	return defaultAndTypeOptionsFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
+		o.DefaultRequired = defaultRequired
 	})
 }
 
 // WithSliceSplitSeparator sets the string to be used as separator on string-to-array conversion. Default is ",".
 func WithSliceSplitSeparator(sep string) DefaultOption {
-	return defaultOptionFunc(func(o *defaultOptions) {
+	return defaultAndTypeSharedOptionFunc(func(o *sharedDefaultOptions) {
 		o.sliceSplitSeparator = sep
 	})
 }
 
 // WithFieldNameMapper sets the field name mapper. Default one uses [strings.ToLower].
 func WithFieldNameMapper(fieldNameMapper FieldNameMapper) DefaultOption {
-	return defaultOptionFunc(func(o *defaultOptions) {
-		o.options.FieldNameMapper = fieldNameMapper
+	return defaultAndTypeOptionsFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
+		o.FieldNameMapper = fieldNameMapper
 	})
 }
 
 // WithPathValue sets the function used to extract the path from the request.
 func WithPathValue(pathValue PathValue) DefaultOption {
-	return defaultOptionFunc(func(o *defaultOptions) {
+	return defaultAndTypeSharedOptionFunc(func(o *sharedDefaultOptions) {
 		o.pathValue = pathValue
 	})
 }
@@ -42,30 +45,30 @@ func WithPathValue(pathValue PathValue) DefaultOption {
 // WithDefaultDecodeOperations adds the default operations (query, path, header, form and body).
 // If the non-"Custom" calls are used, this option is added by default.
 func WithDefaultDecodeOperations() DefaultOption {
-	return defaultOptionFunc(func(o *defaultOptions) {
-		o.options.DecodeOperations[OperationQuery] = &DecodeOperationQuery{}
-		o.options.DecodeOperations[OperationPath] = &DecodeOperationPath{}
-		o.options.DecodeOperations[OperationHeader] = &DecodeOperationHeader{}
-		o.options.DecodeOperations[OperationForm] = &DecodeOperationForm{}
-		o.options.DecodeOperations[OperationBody] = &DecodeOperationBody{}
+	return defaultAndTypeOptionsFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
+		o.DecodeOperations[OperationQuery] = &DecodeOperationQuery{}
+		o.DecodeOperations[OperationPath] = &DecodeOperationPath{}
+		o.DecodeOperations[OperationHeader] = &DecodeOperationHeader{}
+		o.DecodeOperations[OperationForm] = &DecodeOperationForm{}
+		o.DecodeOperations[OperationBody] = &DecodeOperationBody{}
 	})
 }
 
 // WithDecodeOperation adds a decode operation.
 func WithDecodeOperation(name string, operation DecodeOperation) DefaultOption {
-	return defaultOptionFunc(func(o *defaultOptions) {
+	return defaultAndTypeOptionsFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
 		if operation == nil {
-			delete(o.options.DecodeOperations, name)
+			delete(o.DecodeOperations, name)
 		} else {
-			o.options.DecodeOperations[name] = operation
+			o.DecodeOperations[name] = operation
 		}
 	})
 }
 
 // WithResolver sets the decode Resolver.
 func WithResolver(resolver Resolver) DefaultOption {
-	return defaultOptionFunc(func(o *defaultOptions) {
-		o.options.Resolver = resolver
+	return defaultAndTypeOptionsFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
+		o.Resolver = resolver
 	})
 }
 
@@ -74,44 +77,58 @@ func WithResolver(resolver Resolver) DefaultOption {
 // WithMapTags will result in "field configuration not found" errors (except in free-standing functions like
 // Decode, CustomDecode, DecodeType and CustomDecodeType.
 func WithDefaultMapTags(dataForType any, tags MapTags) DefaultOption {
-	return defaultOptionFunc(func(o *defaultOptions) {
-		o.options.DefaultMapTagsSet(reflect.TypeOf(dataForType), tags)
+	return defaultAndTypeOptionsFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
+		o.DefaultMapTagsSet(reflect.TypeOf(dataForType), tags)
 	})
 }
 
 // WithDefaultMapTagsType is the same as WithDefaultMapTags using a reflect.Type.
 func WithDefaultMapTagsType(typ reflect.Type, tags MapTags) DefaultOption {
-	return defaultOptionFunc(func(o *defaultOptions) {
-		o.options.DefaultMapTagsSet(typ, tags)
+	return defaultAndTypeOptionsFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
+		o.DefaultMapTagsSet(typ, tags)
 	})
 }
 
 // WithStructInfoCache sets whether to cache info for structs on parse. Default is false.
 func WithStructInfoCache(cache bool) DefaultOption {
-	return defaultOptionFunc(func(o *defaultOptions) {
-		o.options.StructInfoCache(cache)
+	return defaultAndTypeOptionsFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
+		o.StructInfoCache(cache)
 	})
 }
 
 // WithAllowReadBody sets whether operations are allowed to read the request body. Default is false.
 func WithAllowReadBody(allowReadBody bool) FullOption {
-	return &withAllowReadBody{allowReadBody: allowReadBody}
+	return defaultAndTypeSharedFullOptionFunc(func(o *sharedDefaultOptions) {
+		o.defaultDecodeOptions.allowReadBody = allowReadBody
+	}, func(o *decodeOptions) {
+		o.allowReadBody = allowReadBody
+	})
 }
 
 // WithEnsureAllQueryUsed sets whether to check if all query parameters were used.
 func WithEnsureAllQueryUsed(ensureAllQueryUsed bool) FullOption {
-	return &withEnsureAllQueryUsed{ensureAllQueryUsed: ensureAllQueryUsed}
+	return defaultAndTypeSharedFullOptionFunc(func(o *sharedDefaultOptions) {
+		o.defaultDecodeOptions.ensureAllQueryUsed = ensureAllQueryUsed
+	}, func(o *decodeOptions) {
+		o.ensureAllQueryUsed = ensureAllQueryUsed
+	})
 }
 
 // WithEnsureAllFormUsed sets whether to check if all form parameters were used.
 func WithEnsureAllFormUsed(ensureAllFormUsed bool) FullOption {
-	return &withEnsureAllFormUsed{ensureAllFormUsed: ensureAllFormUsed}
+	return defaultAndTypeSharedFullOptionFunc(func(o *sharedDefaultOptions) {
+		o.defaultDecodeOptions.ensureAllFormUsed = ensureAllFormUsed
+	}, func(o *decodeOptions) {
+		o.ensureAllFormUsed = ensureAllFormUsed
+	})
 }
 
 // WithMapTags sets decode-operation-specific MapTags. These override the default cached struct information
 // but don't change the original one. This should be used to override configurations on each call.
-func WithMapTags(tags MapTags) DecodeOption {
-	return decodeOptionFunc(func(o *decodeOptions) {
+func WithMapTags(tags MapTags) TypeAndDecodeOption {
+	return typeAndDecodeOptionFunc(func(o *typeDefaultOptions) {
+		o.options.MapTags = tags
+	}, func(o *decodeOptions) {
 		o.options.MapTags = tags
 	})
 }
@@ -122,46 +139,4 @@ func withUseDecodeMapTagsAsDefault(useDecodeMapTagsAsDefault bool) DecodeOption 
 	return decodeOptionFunc(func(o *decodeOptions) {
 		o.options.UseDecodeMapTagsAsDefault = useDecodeMapTagsAsDefault
 	})
-}
-
-type withAllowReadBody struct {
-	allowReadBody bool
-}
-
-func (w withAllowReadBody) isOption() {}
-
-func (w withAllowReadBody) applyDefaultOption(o *defaultOptions) {
-	o.defaultDecodeOptions.allowReadBody = w.allowReadBody
-}
-
-func (w withAllowReadBody) applyDecodeOption(o *decodeOptions) {
-	o.allowReadBody = w.allowReadBody
-}
-
-type withEnsureAllQueryUsed struct {
-	ensureAllQueryUsed bool
-}
-
-func (w withEnsureAllQueryUsed) isOption() {}
-
-func (w withEnsureAllQueryUsed) applyDefaultOption(o *defaultOptions) {
-	o.defaultDecodeOptions.ensureAllQueryUsed = w.ensureAllQueryUsed
-}
-
-func (w withEnsureAllQueryUsed) applyDecodeOption(o *decodeOptions) {
-	o.ensureAllQueryUsed = w.ensureAllQueryUsed
-}
-
-type withEnsureAllFormUsed struct {
-	ensureAllFormUsed bool
-}
-
-func (w withEnsureAllFormUsed) isOption() {}
-
-func (w withEnsureAllFormUsed) applyDefaultOption(o *defaultOptions) {
-	o.defaultDecodeOptions.ensureAllFormUsed = w.ensureAllFormUsed
-}
-
-func (w withEnsureAllFormUsed) applyDecodeOption(o *decodeOptions) {
-	o.ensureAllFormUsed = w.ensureAllFormUsed
 }

@@ -11,13 +11,23 @@ type Option interface {
 }
 
 type DefaultOption interface {
-	Option
+	TypeDefaultOption
 	applyDefaultOption(*defaultOptions)
+}
+
+type TypeDefaultOption interface {
+	Option
+	applyTypeDefaultOption(*typeDefaultOptions)
 }
 
 type DecodeOption interface {
 	Option
 	applyDecodeOption(*decodeOptions)
+}
+
+type TypeAndDecodeOption interface {
+	TypeDefaultOption
+	DecodeOption
 }
 
 type FullOption interface {
