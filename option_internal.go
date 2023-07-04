@@ -154,13 +154,3 @@ func fullSharedOptionFunc(def func(o *sharedDefaultOptions), dec func(o *decodeO
 		dec(o)
 	})
 }
-
-// // concatOptionsBefore returns an array with "options" before "source".
-// func concatOptionsBefore[T Option](source []T, optns ...T) []T {
-// 	return options.ConcatOptionsBefore(source, optns...)
-// }
-//
-// // extractOptions extracts only options of a specific type.
-// func extractOptions[T Option](optns []Option) []T {
-// 	return options.ExtractOptions(optns)
-// }
