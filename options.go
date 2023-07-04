@@ -9,35 +9,35 @@ import (
 
 // WithTagName sets the tag name to check on structs. The default is "inreq".
 func WithTagName(tagName string) DefaultOption {
-	return defaultAndTypeOptionsFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
+	return defaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
 		o.TagName = tagName
 	})
 }
 
 // WithDefaultRequired sets whether the default for fields should be "required" or "not required"
 func WithDefaultRequired(defaultRequired bool) DefaultOption {
-	return defaultAndTypeOptionsFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
+	return defaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
 		o.DefaultRequired = defaultRequired
 	})
 }
 
 // WithSliceSplitSeparator sets the string to be used as separator on string-to-array conversion. Default is ",".
 func WithSliceSplitSeparator(sep string) DefaultOption {
-	return defaultAndTypeSharedOptionFunc(func(o *sharedDefaultOptions) {
+	return defaultSharedOptionFunc(func(o *sharedDefaultOptions) {
 		o.sliceSplitSeparator = sep
 	})
 }
 
 // WithFieldNameMapper sets the field name mapper. Default one uses [strings.ToLower].
 func WithFieldNameMapper(fieldNameMapper FieldNameMapper) DefaultOption {
-	return defaultAndTypeOptionsFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
+	return defaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
 		o.FieldNameMapper = fieldNameMapper
 	})
 }
 
 // WithPathValue sets the function used to extract the path from the request.
 func WithPathValue(pathValue PathValue) DefaultOption {
-	return defaultAndTypeSharedOptionFunc(func(o *sharedDefaultOptions) {
+	return defaultSharedOptionFunc(func(o *sharedDefaultOptions) {
 		o.pathValue = pathValue
 	})
 }
@@ -45,7 +45,7 @@ func WithPathValue(pathValue PathValue) DefaultOption {
 // WithDefaultDecodeOperations adds the default operations (query, path, header, form and body).
 // If the non-"Custom" calls are used, this option is added by default.
 func WithDefaultDecodeOperations() DefaultOption {
-	return defaultAndTypeOptionsFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
+	return defaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
 		o.DecodeOperations[OperationQuery] = &DecodeOperationQuery{}
 		o.DecodeOperations[OperationPath] = &DecodeOperationPath{}
 		o.DecodeOperations[OperationHeader] = &DecodeOperationHeader{}
@@ -56,7 +56,7 @@ func WithDefaultDecodeOperations() DefaultOption {
 
 // WithDecodeOperation adds a decode operation.
 func WithDecodeOperation(name string, operation DecodeOperation) DefaultOption {
-	return defaultAndTypeOptionsFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
+	return defaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
 		if operation == nil {
 			delete(o.DecodeOperations, name)
 		} else {
@@ -67,7 +67,7 @@ func WithDecodeOperation(name string, operation DecodeOperation) DefaultOption {
 
 // WithResolver sets the decode Resolver.
 func WithResolver(resolver Resolver) DefaultOption {
-	return defaultAndTypeOptionsFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
+	return defaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
 		o.Resolver = resolver
 	})
 }
@@ -77,28 +77,28 @@ func WithResolver(resolver Resolver) DefaultOption {
 // WithMapTags will result in "field configuration not found" errors (except in free-standing functions like
 // Decode, CustomDecode, DecodeType and CustomDecodeType.
 func WithDefaultMapTags(dataForType any, tags MapTags) DefaultOption {
-	return defaultAndTypeOptionsFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
+	return defaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
 		o.DefaultMapTagsSet(reflect.TypeOf(dataForType), tags)
 	})
 }
 
 // WithDefaultMapTagsType is the same as WithDefaultMapTags using a reflect.Type.
 func WithDefaultMapTagsType(typ reflect.Type, tags MapTags) DefaultOption {
-	return defaultAndTypeOptionsFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
+	return defaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
 		o.DefaultMapTagsSet(typ, tags)
 	})
 }
 
 // WithStructInfoCache sets whether to cache info for structs on parse. Default is false.
 func WithStructInfoCache(cache bool) DefaultOption {
-	return defaultAndTypeOptionsFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
+	return defaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
 		o.StructInfoCache(cache)
 	})
 }
 
 // WithAllowReadBody sets whether operations are allowed to read the request body. Default is false.
 func WithAllowReadBody(allowReadBody bool) FullOption {
-	return defaultAndTypeSharedFullOptionFunc(func(o *sharedDefaultOptions) {
+	return fullSharedOptionFunc(func(o *sharedDefaultOptions) {
 		o.defaultDecodeOptions.allowReadBody = allowReadBody
 	}, func(o *decodeOptions) {
 		o.allowReadBody = allowReadBody
@@ -107,7 +107,7 @@ func WithAllowReadBody(allowReadBody bool) FullOption {
 
 // WithEnsureAllQueryUsed sets whether to check if all query parameters were used.
 func WithEnsureAllQueryUsed(ensureAllQueryUsed bool) FullOption {
-	return defaultAndTypeSharedFullOptionFunc(func(o *sharedDefaultOptions) {
+	return fullSharedOptionFunc(func(o *sharedDefaultOptions) {
 		o.defaultDecodeOptions.ensureAllQueryUsed = ensureAllQueryUsed
 	}, func(o *decodeOptions) {
 		o.ensureAllQueryUsed = ensureAllQueryUsed
@@ -116,7 +116,7 @@ func WithEnsureAllQueryUsed(ensureAllQueryUsed bool) FullOption {
 
 // WithEnsureAllFormUsed sets whether to check if all form parameters were used.
 func WithEnsureAllFormUsed(ensureAllFormUsed bool) FullOption {
-	return defaultAndTypeSharedFullOptionFunc(func(o *sharedDefaultOptions) {
+	return fullSharedOptionFunc(func(o *sharedDefaultOptions) {
 		o.defaultDecodeOptions.ensureAllFormUsed = ensureAllFormUsed
 	}, func(o *decodeOptions) {
 		o.ensureAllFormUsed = ensureAllFormUsed
