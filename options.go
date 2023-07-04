@@ -9,35 +9,35 @@ import (
 
 // WithTagName sets the tag name to check on structs. The default is "inreq".
 func WithTagName(tagName string) DefaultOption {
-	return defaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
+	return defaultAndTypeDefaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
 		o.TagName = tagName
 	})
 }
 
 // WithDefaultRequired sets whether the default for fields should be "required" or "not required"
 func WithDefaultRequired(defaultRequired bool) DefaultOption {
-	return defaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
+	return defaultAndTypeDefaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
 		o.DefaultRequired = defaultRequired
 	})
 }
 
 // WithSliceSplitSeparator sets the string to be used as separator on string-to-array conversion. Default is ",".
 func WithSliceSplitSeparator(sep string) DefaultOption {
-	return defaultSharedOptionFunc(func(o *sharedDefaultOptions) {
+	return defaultAndTypeDefaultSharedOptionFunc(func(o *sharedDefaultOptions) {
 		o.sliceSplitSeparator = sep
 	})
 }
 
 // WithFieldNameMapper sets the field name mapper. Default one uses [strings.ToLower].
 func WithFieldNameMapper(fieldNameMapper FieldNameMapper) DefaultOption {
-	return defaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
+	return defaultAndTypeDefaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
 		o.FieldNameMapper = fieldNameMapper
 	})
 }
 
 // WithPathValue sets the function used to extract the path from the request.
 func WithPathValue(pathValue PathValue) DefaultOption {
-	return defaultSharedOptionFunc(func(o *sharedDefaultOptions) {
+	return defaultAndTypeDefaultSharedOptionFunc(func(o *sharedDefaultOptions) {
 		o.pathValue = pathValue
 	})
 }
@@ -45,7 +45,7 @@ func WithPathValue(pathValue PathValue) DefaultOption {
 // WithDefaultDecodeOperations adds the default operations (query, path, header, form and body).
 // If the non-"Custom" calls are used, this option is added by default.
 func WithDefaultDecodeOperations() DefaultOption {
-	return defaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
+	return defaultAndTypeDefaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
 		o.DecodeOperations[OperationQuery] = &DecodeOperationQuery{}
 		o.DecodeOperations[OperationPath] = &DecodeOperationPath{}
 		o.DecodeOperations[OperationHeader] = &DecodeOperationHeader{}
@@ -56,7 +56,7 @@ func WithDefaultDecodeOperations() DefaultOption {
 
 // WithDecodeOperation adds a decode operation.
 func WithDecodeOperation(name string, operation DecodeOperation) DefaultOption {
-	return defaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
+	return defaultAndTypeDefaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
 		if operation == nil {
 			delete(o.DecodeOperations, name)
 		} else {
@@ -67,7 +67,7 @@ func WithDecodeOperation(name string, operation DecodeOperation) DefaultOption {
 
 // WithResolver sets the decode Resolver.
 func WithResolver(resolver Resolver) DefaultOption {
-	return defaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
+	return defaultAndTypeDefaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
 		o.Resolver = resolver
 	})
 }
@@ -77,21 +77,21 @@ func WithResolver(resolver Resolver) DefaultOption {
 // WithMapTags will result in "field configuration not found" errors (except in free-standing functions like
 // Decode, CustomDecode, DecodeType and CustomDecodeType.
 func WithDefaultMapTags(dataForType any, tags MapTags) DefaultOption {
-	return defaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
+	return defaultAndTypeDefaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
 		o.DefaultMapTagsSet(reflect.TypeOf(dataForType), tags)
 	})
 }
 
 // WithDefaultMapTagsType is the same as WithDefaultMapTags using a reflect.Type.
 func WithDefaultMapTagsType(typ reflect.Type, tags MapTags) DefaultOption {
-	return defaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
+	return defaultAndTypeDefaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
 		o.DefaultMapTagsSet(typ, tags)
 	})
 }
 
 // WithStructInfoCache sets whether to cache info for structs on parse. Default is false.
 func WithStructInfoCache(cache bool) DefaultOption {
-	return defaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
+	return defaultAndTypeDefaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
 		o.StructInfoCache(cache)
 	})
 }
@@ -130,6 +130,12 @@ func WithMapTags(tags MapTags) TypeDefaultAndDecodeOption {
 		o.options.MapTags = tags
 	}, func(o *decodeOptions) {
 		o.options.MapTags = tags
+	})
+}
+
+func WithX(x int) TypeDefaultOption {
+	return typeDefaultOptionFunc(func(o *typeDefaultOptions) {
+		o.x = x
 	})
 }
 

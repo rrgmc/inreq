@@ -88,7 +88,7 @@ func TestDecodeEmbed(t *testing.T) {
 		EmbedTestInner{Val: "x1"},
 	}
 
-	err := Decode(r, data)
+	err := Decode(r, data, WithX(12))
 	require.NoError(t, err)
 	require.Equal(t, want, data)
 }

@@ -31,6 +31,7 @@ func (d *defaultOptions) apply(options ...DefaultOption) {
 type typeDefaultOptions struct {
 	options instruct.TypeDefaultOptions[*http.Request, DecodeContext]
 	sharedDefaultOptions
+	x int
 }
 
 func (d *typeDefaultOptions) apply(options ...TypeDefaultOption) {
@@ -87,11 +88,17 @@ func defaultDecodeOptions() decodeOptions {
 
 // helpers
 
-func defaultOptionFunc(f func(o *instruct.DefaultOptions[*http.Request, DecodeContext])) DefaultOption {
-	return options.DefaultOptionFunc[*http.Request, DecodeContext, defaultOptions, typeDefaultOptions](func(o *defaultOptions) {
+func defaultAndTypeDefaultOptionFunc(f func(o *instruct.DefaultOptions[*http.Request, DecodeContext])) DefaultAndTypeDefaultOption {
+	return options.DefaultAndTypeDefaultOptionFunc[*http.Request, DecodeContext, defaultOptions, typeDefaultOptions](func(o *defaultOptions) {
 		f(&o.options)
 	}, func(o *typeDefaultOptions) {
 		f(&o.options.DefaultOptions)
+	})
+}
+
+func typeDefaultOptionFunc(f func(o *typeDefaultOptions)) TypeDefaultOption {
+	return options.TypeDefaultOptionFunc[*http.Request, DecodeContext, typeDefaultOptions](func(o *typeDefaultOptions) {
+		f(o)
 	})
 }
 
@@ -101,8 +108,14 @@ func decodeOptionFunc(f func(o *decodeOptions)) DecodeOption {
 	})
 }
 
-func defaultSharedOptionFunc(f func(o *sharedDefaultOptions)) DefaultOption {
-	return options.DefaultOptionFunc[*http.Request, DecodeContext, defaultOptions, typeDefaultOptions](func(o *defaultOptions) {
+func typeDecodeOptionFunc(f func(o *decodeOptions)) TypeDecodeOption {
+	return options.TypeDecodeOptionFunc[*http.Request, DecodeContext, decodeOptions](func(o *decodeOptions) {
+		f(o)
+	})
+}
+
+func defaultAndTypeDefaultSharedOptionFunc(f func(o *sharedDefaultOptions)) DefaultAndTypeDefaultOption {
+	return options.DefaultAndTypeDefaultOptionFunc[*http.Request, DecodeContext, defaultOptions, typeDefaultOptions](func(o *defaultOptions) {
 		f(&o.sharedDefaultOptions)
 	}, func(o *typeDefaultOptions) {
 		f(&o.sharedDefaultOptions)
@@ -118,21 +131,23 @@ func typeAndDecodeOptionFunc(tf func(o *typeDefaultOptions), cf func(o *decodeOp
 }
 
 func fullSharedOptionFunc(def func(o *sharedDefaultOptions), dec func(o *decodeOptions)) FullOption {
-	return options.FullOptionFunc[*http.Request, DecodeContext, defaultOptions, typeDefaultOptions, decodeOptions](func(o *defaultOptions) {
+	return options.FullOptionFunc[*http.Request, DecodeContext, defaultOptions, typeDefaultOptions, decodeOptions, decodeOptions](func(o *defaultOptions) {
 		def(&o.sharedDefaultOptions)
 	}, func(o *typeDefaultOptions) {
 		def(&o.sharedDefaultOptions)
 	}, func(o *decodeOptions) {
 		dec(o)
+	}, func(o *decodeOptions) {
+		dec(o)
 	})
 }
 
-// concatOptionsBefore returns an array with "options" before "source".
-func concatOptionsBefore[T Option](source []T, optns ...T) []T {
-	return options.ConcatOptionsBefore[*http.Request, DecodeContext](source, optns...)
-}
-
-// extractOptions extracts only options of a specific type.
-func extractOptions[T Option](optns []Option) []T {
-	return options.ExtractOptions[*http.Request, DecodeContext, T](optns)
-}
+// // concatOptionsBefore returns an array with "options" before "source".
+// func concatOptionsBefore[T Option](source []T, optns ...T) []T {
+// 	return options.ConcatOptionsBefore(source, optns...)
+// }
+//
+// // extractOptions extracts only options of a specific type.
+// func extractOptions[T Option](optns []Option) []T {
+// 	return options.ExtractOptions(optns)
+// }

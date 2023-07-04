@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/RangelReale/instruct"
+	inoptions "github.com/RangelReale/instruct/options"
 )
 
 // Decoder decodes http requests to structs.
@@ -14,7 +15,7 @@ type Decoder struct {
 
 // NewDecoder creates a Decoder instance with the default decode operations (query, path, header, form, body).
 func NewDecoder(options ...DefaultOption) *Decoder {
-	return NewCustomDecoder(concatOptionsBefore[DefaultOption](options, WithDefaultDecodeOperations())...)
+	return NewCustomDecoder(inoptions.ConcatOptionsBefore[DefaultOption](options, WithDefaultDecodeOperations())...)
 }
 
 // NewCustomDecoder creates a Decoder instance without any decode operations. At least one must be added for
@@ -48,21 +49,21 @@ func (d *Decoder) Decode(r *http.Request, data any, options ...DecodeOption) err
 
 // Decode decodes the http request to the struct passed in "data" using NewDecoder.
 // Any map tags set using WithMapTags will be considered as "default" map tags. (see WithDefaultMapTags for details).
-func Decode(r *http.Request, data any, options ...Option) error {
-	options = concatOptionsBefore[Option](options,
+func Decode(r *http.Request, data any, options ...AnyOption) error {
+	options = inoptions.ConcatOptionsBefore[AnyOption](options,
 		withUseDecodeMapTagsAsDefault(true),
 		WithDefaultDecodeOperations(),
 	)
-	return NewDecoder(extractOptions[DefaultOption](options)...).Decode(r, data,
-		extractOptions[DecodeOption](options)...)
+	return NewDecoder(inoptions.ExtractOptions[DefaultOption](options)...).Decode(r, data,
+		inoptions.ExtractOptions[DecodeOption](options)...)
 }
 
 // CustomDecode decodes the http request to the struct passed in "data" using NewCustomDecoder.
 // Any map tags set using WithMapTags will be considered as "default" map tags. (see WithDefaultMapTags for details).
-func CustomDecode(r *http.Request, data any, options ...Option) error {
-	options = concatOptionsBefore[Option](options,
+func CustomDecode(r *http.Request, data any, options ...AnyOption) error {
+	options = inoptions.ConcatOptionsBefore[AnyOption](options,
 		withUseDecodeMapTagsAsDefault(true),
 	)
-	return NewDecoder(extractOptions[DefaultOption](options)...).Decode(r, data,
-		extractOptions[DecodeOption](options)...)
+	return NewDecoder(inoptions.ExtractOptions[DefaultOption](options)...).Decode(r, data,
+		inoptions.ExtractOptions[DecodeOption](options)...)
 }
