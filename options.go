@@ -8,35 +8,35 @@ import (
 )
 
 // WithTagName sets the tag name to check on structs. The default is "inreq".
-func WithTagName(tagName string) DefaultOption {
+func WithTagName(tagName string) DefaultAndTypeDefaultOption {
 	return defaultAndTypeDefaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
 		o.TagName = tagName
 	})
 }
 
 // WithDefaultRequired sets whether the default for fields should be "required" or "not required"
-func WithDefaultRequired(defaultRequired bool) DefaultOption {
+func WithDefaultRequired(defaultRequired bool) DefaultAndTypeDefaultOption {
 	return defaultAndTypeDefaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
 		o.DefaultRequired = defaultRequired
 	})
 }
 
 // WithSliceSplitSeparator sets the string to be used as separator on string-to-array conversion. Default is ",".
-func WithSliceSplitSeparator(sep string) DefaultOption {
+func WithSliceSplitSeparator(sep string) DefaultAndTypeDefaultOption {
 	return defaultAndTypeDefaultSharedOptionFunc(func(o *sharedDefaultOptions) {
 		o.sliceSplitSeparator = sep
 	})
 }
 
 // WithFieldNameMapper sets the field name mapper. Default one uses [strings.ToLower].
-func WithFieldNameMapper(fieldNameMapper FieldNameMapper) DefaultOption {
+func WithFieldNameMapper(fieldNameMapper FieldNameMapper) DefaultAndTypeDefaultOption {
 	return defaultAndTypeDefaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
 		o.FieldNameMapper = fieldNameMapper
 	})
 }
 
 // WithPathValue sets the function used to extract the path from the request.
-func WithPathValue(pathValue PathValue) DefaultOption {
+func WithPathValue(pathValue PathValue) DefaultAndTypeDefaultOption {
 	return defaultAndTypeDefaultSharedOptionFunc(func(o *sharedDefaultOptions) {
 		o.pathValue = pathValue
 	})
@@ -55,7 +55,7 @@ func WithDefaultDecodeOperations() DefaultAndTypeDefaultOption {
 }
 
 // WithDecodeOperation adds a decode operation.
-func WithDecodeOperation(name string, operation DecodeOperation) DefaultOption {
+func WithDecodeOperation(name string, operation DecodeOperation) DefaultAndTypeDefaultOption {
 	return defaultAndTypeDefaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
 		if operation == nil {
 			delete(o.DecodeOperations, name)
@@ -66,7 +66,7 @@ func WithDecodeOperation(name string, operation DecodeOperation) DefaultOption {
 }
 
 // WithResolver sets the decode Resolver.
-func WithResolver(resolver Resolver) DefaultOption {
+func WithResolver(resolver Resolver) DefaultAndTypeDefaultOption {
 	return defaultAndTypeDefaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
 		o.Resolver = resolver
 	})
@@ -76,21 +76,21 @@ func WithResolver(resolver Resolver) DefaultOption {
 // check for unused fields takes both in account. Passing a struct without any struct tags and using
 // WithMapTags will result in "field configuration not found" errors (except in free-standing functions like
 // Decode, CustomDecode, DecodeType and CustomDecodeType.
-func WithDefaultMapTags(dataForType any, tags MapTags) DefaultOption {
+func WithDefaultMapTags(dataForType any, tags MapTags) DefaultAndTypeDefaultOption {
 	return defaultAndTypeDefaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
 		o.DefaultMapTagsSet(reflect.TypeOf(dataForType), tags)
 	})
 }
 
 // WithDefaultMapTagsType is the same as WithDefaultMapTags using a reflect.Type.
-func WithDefaultMapTagsType(typ reflect.Type, tags MapTags) DefaultOption {
+func WithDefaultMapTagsType(typ reflect.Type, tags MapTags) DefaultAndTypeDefaultOption {
 	return defaultAndTypeDefaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
 		o.DefaultMapTagsSet(typ, tags)
 	})
 }
 
 // WithStructInfoCache sets whether to cache info for structs on parse. Default is false.
-func WithStructInfoCache(cache bool) DefaultOption {
+func WithStructInfoCache(cache bool) DefaultAndTypeDefaultOption {
 	return defaultAndTypeDefaultOptionFunc(func(o *instruct.DefaultOptions[*http.Request, DecodeContext]) {
 		o.StructInfoCache(cache)
 	})
