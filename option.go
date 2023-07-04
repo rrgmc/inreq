@@ -25,7 +25,7 @@ type DecodeOption interface {
 	applyDecodeOption(*decodeOptions)
 }
 
-type TypeAndDecodeOption interface {
+type TypeDefaultAndDecodeOption interface {
 	TypeDefaultOption
 	DecodeOption
 }

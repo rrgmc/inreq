@@ -125,7 +125,7 @@ func WithEnsureAllFormUsed(ensureAllFormUsed bool) FullOption {
 
 // WithMapTags sets decode-operation-specific MapTags. These override the default cached struct information
 // but don't change the original one. This should be used to override configurations on each call.
-func WithMapTags(tags MapTags) TypeAndDecodeOption {
+func WithMapTags(tags MapTags) TypeDefaultAndDecodeOption {
 	return typeAndDecodeOptionFunc(func(o *typeDefaultOptions) {
 		o.options.MapTags = tags
 	}, func(o *decodeOptions) {
