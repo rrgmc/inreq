@@ -133,12 +133,6 @@ func WithMapTags(tags MapTags) TypeDefaultAndDecodeOption {
 	})
 }
 
-func WithX(x int) TypeDefaultOption {
-	return typeDefaultOptionFunc(func(o *typeDefaultOptions) {
-		o.x = x
-	})
-}
-
 // withUseDecodeMapTagsAsDefault is an internal option to allow WithMapTags to set default map tags for
 // free-standing Decode functions.
 func withUseDecodeMapTagsAsDefault(useDecodeMapTagsAsDefault bool) DecodeOption {

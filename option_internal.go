@@ -31,7 +31,6 @@ func (d *defaultOptions) apply(options ...DefaultOption) {
 type typeDefaultOptions struct {
 	options instruct.TypeDefaultOptions[*http.Request, DecodeContext]
 	sharedDefaultOptions
-	x int
 }
 
 func (d *typeDefaultOptions) apply(options ...TypeDefaultOption) {
