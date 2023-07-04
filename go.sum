@@ -1,5 +1,5 @@
-github.com/RangelReale/instruct v0.10.1 h1:LzyCTixH3OQ0zeX8Xcp/X66KCgAtc6xEBPkcPjieDpM=
-github.com/RangelReale/instruct v0.10.1/go.mod h1:IKuAbSEzfM7ucw8sMYKLvOj4cVd+wDpaQ0uQj2pYN7w=
+github.com/RangelReale/instruct v0.11.0 h1:z/YKfKXmFD+VYXn0uLSsNSw7N4cHnFaXv2DKm6zulNc=
+github.com/RangelReale/instruct v0.11.0/go.mod h1:IKuAbSEzfM7ucw8sMYKLvOj4cVd+wDpaQ0uQj2pYN7w=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
