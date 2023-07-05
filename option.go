@@ -8,7 +8,6 @@ import (
 )
 
 type (
-	Option        = options.Option
 	AnyOption     = options.AnyOption[*http.Request, DecodeContext]
 	DefaultOption = options.DefaultOption[*http.Request, DecodeContext, defaultOptions]
 	DecodeOption  = options.DecodeOption[*http.Request, DecodeContext, decodeOptions]
