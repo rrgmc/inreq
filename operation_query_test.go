@@ -57,6 +57,18 @@ func TestDecodeQuery(t *testing.T) {
 			},
 		},
 		{
+			name:  "decode query with slice no explode",
+			query: [][2]string{{"val", "5,6,7"}},
+			data: &struct {
+				Val []string `inreq:"query,explode=false"`
+			}{},
+			want: &struct {
+				Val []string `inreq:"query,explode=false"`
+			}{
+				Val: []string{"5,6,7"},
+			},
+		},
+		{
 			name:  "decode query with name",
 			query: [][2]string{{"XVal", "x1"}},
 			data: &struct {
