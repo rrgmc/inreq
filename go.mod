@@ -3,7 +3,7 @@ module github.com/RangelReale/inreq
 go 1.20
 
 require (
-	github.com/RangelReale/instruct v0.14.0
+	github.com/RangelReale/instruct v0.15.0
 	github.com/stretchr/testify v1.8.4
 	golang.org/x/exp v0.0.0-20230522175609-2e198f4a06a1
 )
