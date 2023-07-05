@@ -108,6 +108,22 @@ func TestDecodeNonPointer(t *testing.T) {
 	require.ErrorAs(t, err, &target)
 }
 
+func TestDecodeDefaultRequired(t *testing.T) {
+	type DataType struct {
+		Val string `inreq:"header"`
+	}
+
+	r := httptest.NewRequest(http.MethodPost, "/", nil)
+
+	data := DataType{
+		Val: "99",
+	}
+
+	err := Decode(r, &data, WithDefaultRequired(false))
+	require.NoError(t, err)
+	require.Equal(t, "99", data.Val)
+}
+
 func TestDecodeMapTags(t *testing.T) {
 	r := httptest.NewRequest(http.MethodPost, "/", nil)
 	r.Header.Set("val", "x1")
@@ -204,4 +220,49 @@ func TestDecoderMapTagsOverrideStructTags(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, "x1", data.Val)
 	require.Equal(t, "x2", data.X.X1)
+}
+
+func TestDecodeSliceField(t *testing.T) {
+	type DataType struct {
+		Val []int32 `inreq:"header"`
+	}
+
+	r := httptest.NewRequest(http.MethodPost, "/", nil)
+	r.Header.Add("val", "12")
+	r.Header.Add("val", "13")
+	r.Header.Add("val", "15")
+
+	var data DataType
+
+	err := Decode(r, &data)
+	require.NoError(t, err)
+	require.Equal(t, []int32{12, 13, 15}, data.Val)
+}
+
+func TestDecodeSliceFieldString(t *testing.T) {
+	type DataType struct {
+		Val []int32 `inreq:"query"`
+	}
+
+	r := httptest.NewRequest(http.MethodPost, "/?val=12,13,15", nil)
+
+	var data DataType
+
+	err := Decode(r, &data)
+	require.NoError(t, err)
+	require.Equal(t, []int32{12, 13, 15}, data.Val)
+}
+
+func TestDecodeSliceFieldStringSeparator(t *testing.T) {
+	type DataType struct {
+		Val []int32 `inreq:"query"`
+	}
+
+	r := httptest.NewRequest(http.MethodPost, "/?val=12|13|15", nil)
+
+	var data DataType
+
+	err := Decode(r, &data, WithSliceSplitSeparator("|"))
+	require.NoError(t, err)
+	require.Equal(t, []int32{12, 13, 15}, data.Val)
 }

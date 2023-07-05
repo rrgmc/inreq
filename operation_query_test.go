@@ -42,6 +42,21 @@ func TestDecodeQuery(t *testing.T) {
 			},
 		},
 		{
+			name:  "decode query with slice separator",
+			query: [][2]string{{"val", "5|6|7"}},
+			data: &struct {
+				Val []int32 `inreq:"query"`
+			}{},
+			want: &struct {
+				Val []int32 `inreq:"query"`
+			}{
+				Val: []int32{5, 6, 7},
+			},
+			options: []AnyOption{
+				WithSliceSplitSeparator("|"),
+			},
+		},
+		{
 			name:  "decode query with name",
 			query: [][2]string{{"XVal", "x1"}},
 			data: &struct {
@@ -60,6 +75,24 @@ func TestDecodeQuery(t *testing.T) {
 				Val string `inreq:"query,name=XVal"`
 			}{},
 			wantErr: true,
+		},
+		{
+			name:  "decode query ensure all used",
+			query: [][2]string{{"val", "x1"}, {"val2", "x2"}},
+			data: &struct {
+				Val  string `inreq:"query"`
+				Val2 string `inreq:"query"`
+			}{},
+			want: &struct {
+				Val  string `inreq:"query"`
+				Val2 string `inreq:"query"`
+			}{
+				Val:  "x1",
+				Val2: "x2",
+			},
+			options: []AnyOption{
+				WithEnsureAllQueryUsed(true),
+			},
 		},
 		{
 			name:  "decode query not used values error",

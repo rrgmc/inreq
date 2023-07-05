@@ -51,8 +51,17 @@ func (d *DecodeOperationForm) Validate(ctx DecodeContext, r *http.Request) error
 		return nil
 	}
 
+	var form multipart.Form
+	if r.MultipartForm != nil {
+		form = *r.MultipartForm
+	} else {
+		if r.Form != nil {
+			form.Value = r.Form
+		}
+	}
+
 	formKeys := map[string]bool{}
-	for key, _ := range r.URL.Query() {
+	for key, _ := range form.Value {
 		formKeys[key] = true
 	}
 

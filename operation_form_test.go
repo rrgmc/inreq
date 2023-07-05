@@ -62,6 +62,24 @@ func TestDecodeForm(t *testing.T) {
 			wantErr: true,
 		},
 		{
+			name: "decode form ensure all used",
+			form: [][]string{{"val", "x1"}, {"val2", "x2"}},
+			data: &struct {
+				Val  string `inreq:"form"`
+				Val2 string `inreq:"form"`
+			}{},
+			want: &struct {
+				Val  string `inreq:"form"`
+				Val2 string `inreq:"form"`
+			}{
+				Val:  "x1",
+				Val2: "x2",
+			},
+			options: []AnyOption{
+				WithEnsureAllFormUsed(true),
+			},
+		},
+		{
 			name: "decode form not used values error",
 			form: [][]string{{"val", "x1"}, {"val2", "x2"}},
 			data: &struct {

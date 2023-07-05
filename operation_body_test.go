@@ -1,6 +1,7 @@
 package inreq
 
 import (
+	"encoding/xml"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -403,4 +404,21 @@ func TestDecodeBody(t *testing.T) {
 	}
 
 	require.NoError(t, nil)
+}
+
+func TestDecodeBodyXml(t *testing.T) {
+	type DataType struct {
+		_       StructOption `inreq:"body,type=xml"`
+		XMLName xml.Name     `inreq:"-" xml:"DataType"`
+		Val     string
+	}
+
+	r := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(`<DataType><Val>15</Val></DataType>`))
+
+	var data DataType
+
+	err := CustomDecode(r, &data, WithDecodeOperation(OperationBody, &DecodeOperationBody{}))
+	require.NoError(t, err)
+	require.Equal(t, "15", data.Val)
+
 }
