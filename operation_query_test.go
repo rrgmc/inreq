@@ -33,10 +33,10 @@ func TestDecodeQuery(t *testing.T) {
 			name:  "decode query with slice",
 			query: [][2]string{{"val", "5,6,7"}},
 			data: &struct {
-				Val []int32 `inreq:"query"`
+				Val []int32 `inreq:"query,explode=true"`
 			}{},
 			want: &struct {
-				Val []int32 `inreq:"query"`
+				Val []int32 `inreq:"query,explode=true"`
 			}{
 				Val: []int32{5, 6, 7},
 			},
@@ -45,10 +45,10 @@ func TestDecodeQuery(t *testing.T) {
 			name:  "decode query with slice separator",
 			query: [][2]string{{"val", "5|6|7"}},
 			data: &struct {
-				Val []int32 `inreq:"query"`
+				Val []int32 `inreq:"query,explode=true"`
 			}{},
 			want: &struct {
-				Val []int32 `inreq:"query"`
+				Val []int32 `inreq:"query,explode=true"`
 			}{
 				Val: []int32{5, 6, 7},
 			},

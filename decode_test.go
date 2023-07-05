@@ -241,7 +241,7 @@ func TestDecodeSliceField(t *testing.T) {
 
 func TestDecodeSliceFieldString(t *testing.T) {
 	type DataType struct {
-		Val []int32 `inreq:"query"`
+		Val []int32 `inreq:"query,explode=true"`
 	}
 
 	r := httptest.NewRequest(http.MethodPost, "/?val=12,13,15", nil)
@@ -255,7 +255,7 @@ func TestDecodeSliceFieldString(t *testing.T) {
 
 func TestDecodeSliceFieldStringSeparator(t *testing.T) {
 	type DataType struct {
-		Val []int32 `inreq:"query"`
+		Val []int32 `inreq:"query,explode=true"`
 	}
 
 	r := httptest.NewRequest(http.MethodPost, "/?val=12|13|15", nil)

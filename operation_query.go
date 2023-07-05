@@ -19,7 +19,7 @@ func (d *DecodeOperationQuery) Decode(ctx DecodeContext, r *http.Request, field 
 	}
 
 	if field.Kind() == reflect.Slice {
-		explode, err := tag.Options.BoolValue("explode", true)
+		explode, err := tag.Options.BoolValue("explode", false)
 		if err != nil {
 			return false, nil, err
 		}
