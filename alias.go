@@ -19,6 +19,7 @@ type (
 	InvalidDecodeError         = types.InvalidDecodeError
 	RequiredError              = types.RequiredError
 	OperationNotSupportedError = types.OperationNotSupportedError
+	CoerceError                = types.CoerceError
 )
 
 // map_tags.go
