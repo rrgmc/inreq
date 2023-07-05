@@ -90,6 +90,16 @@ func TestDecodeTypeMapTags(t *testing.T) {
 	}))
 	require.NoError(t, err)
 	require.Equal(t, "x1", data.Val)
+
+	d := NewTypeDecoder[DataType](WithMapTags(map[string]any{
+		"Val": "header",
+		"X": map[string]any{
+			"X1": "header",
+		},
+	}))
+	data2, err := d.Decode(r)
+	require.NoError(t, err)
+	require.Equal(t, "x1", data2.Val)
 }
 
 func TestDecodeTypeMapTagsOverrideStructTags(t *testing.T) {
