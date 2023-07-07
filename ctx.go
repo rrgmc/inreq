@@ -7,6 +7,8 @@ type DecodeContext interface {
 	instruct.DecodeContext
 	// PathValue is the function used to extract the path from the request.
 	PathValue() PathValue
+	// BodyDecoder is the interface used to parse body data into structs.
+	BodyDecoder() BodyDecoder
 	// IsBodyDecoded returns whether the body was already decoded.
 	IsBodyDecoded() bool
 	// DecodedBody signals that the body was decoded.
@@ -24,6 +26,7 @@ type DecodeContext interface {
 type decodeContext struct {
 	instruct.DefaultDecodeContext
 	pathValue           PathValue
+	bodyDecoder         BodyDecoder
 	decodedBody         bool
 	allowReadBody       bool
 	sliceSplitSeparator string
@@ -33,6 +36,10 @@ type decodeContext struct {
 
 func (d *decodeContext) PathValue() PathValue {
 	return d.pathValue
+}
+
+func (d *decodeContext) BodyDecoder() BodyDecoder {
+	return d.bodyDecoder
 }
 
 func (d *decodeContext) IsBodyDecoded() bool {

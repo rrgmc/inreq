@@ -36,6 +36,12 @@ func (p PathValueFunc) GetRequestPath(r *http.Request, name string) (found bool,
 	return p(r, name)
 }
 
+// BodyDecoder should unmarshal the body into "data".
+// The default one supports JSON and XML.
+type BodyDecoder interface {
+	Unmarshal(ctx DecodeContext, typeParam string, r *http.Request, data any) (bool, any, error)
+}
+
 // FieldNameMapper maps a struct field name to the header/query/form field name.
 // The default one uses [strings.ToLower].
 type FieldNameMapper = instruct.FieldNameMapper

@@ -14,6 +14,7 @@ const (
 type sharedDefaultOptions struct {
 	sliceSplitSeparator  string        // string to be used as separator on string-to-array conversion. Default is ",".
 	pathValue            PathValue     // function used to extract the path from the request.
+	bodyDecoder          BodyDecoder   // interface to decode body to struct. Default one handles JSON and XML.
 	defaultDecodeOptions decodeOptions // default decode options.
 }
 
@@ -61,6 +62,7 @@ func (d *decodeOptions) applyType(options ...TypeDecodeOption) {
 func defaultSharedDefaultOptions() sharedDefaultOptions {
 	ret := sharedDefaultOptions{
 		sliceSplitSeparator:  ",",
+		bodyDecoder:          NewDefaultBodyDecoder(),
 		defaultDecodeOptions: defaultDecodeOptions(),
 	}
 	return ret

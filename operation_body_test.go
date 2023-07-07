@@ -2,6 +2,7 @@ package inreq
 
 import (
 	"encoding/xml"
+	"net"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -128,6 +129,45 @@ func TestDecodeBody(t *testing.T) {
 				}{
 					Val: "x1",
 				},
+			},
+		},
+		{
+			name:            "decode body field to string",
+			skipContentType: true,
+			body:            `x1`,
+			data: &struct {
+				B string `inreq:"body"`
+			}{},
+			want: &struct {
+				B string `inreq:"body"`
+			}{
+				B: "x1",
+			},
+		},
+		{
+			name:            "decode body field to bytes",
+			skipContentType: true,
+			body:            `x1`,
+			data: &struct {
+				B []byte `inreq:"body"`
+			}{},
+			want: &struct {
+				B []byte `inreq:"body"`
+			}{
+				B: []byte("x1"),
+			},
+		},
+		{
+			name:            "decode body field to encoding.TextUnmarshaler",
+			skipContentType: true,
+			body:            `1.2.3.4`,
+			data: &struct {
+				B net.IP `inreq:"body"`
+			}{},
+			want: &struct {
+				B net.IP `inreq:"body"`
+			}{
+				B: net.IP{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0xff, 0xff, 0x1, 0x2, 0x3, 0x4},
 			},
 		},
 		{
@@ -291,7 +331,7 @@ func TestDecodeBody(t *testing.T) {
 			},
 		},
 		{
-			name: "decode query with map tags",
+			name: "decode body with map tags",
 			body: `{"Val": "x1"}`,
 			data: &struct {
 				B struct {
@@ -316,7 +356,7 @@ func TestDecodeBody(t *testing.T) {
 			},
 		},
 		{
-			name: "decode query with unused map tags error",
+			name: "decode body with unused map tags error",
 			body: `{"Val": "x1"}`,
 			data: &struct {
 				B struct {

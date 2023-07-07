@@ -38,6 +38,7 @@ func (d *Decoder) Decode(r *http.Request, data any, options ...DecodeOption) err
 	optns.options.Ctx = &decodeContext{
 		DefaultDecodeContext: instruct.NewDefaultDecodeContext(d.defaultOptions.options.FieldNameMapper),
 		pathValue:            d.defaultOptions.pathValue,
+		bodyDecoder:          d.defaultOptions.bodyDecoder,
 		sliceSplitSeparator:  d.defaultOptions.sliceSplitSeparator,
 		allowReadBody:        optns.allowReadBody,
 		ensureAllQueryUsed:   optns.ensureAllQueryUsed,

@@ -42,6 +42,13 @@ func WithPathValue(pathValue PathValue) DefaultAndTypeDefaultOption {
 	})
 }
 
+// WithBodyDecoder sets the interface used to parse body data into structs.
+func WithBodyDecoder(bodyDecoder BodyDecoder) DefaultAndTypeDefaultOption {
+	return defaultAndTypeDefaultSharedOptionFunc(func(o *sharedDefaultOptions) {
+		o.bodyDecoder = bodyDecoder
+	})
+}
+
 // WithDefaultDecodeOperations adds the default operations (query, path, header, form and body).
 // If the non-"Custom" calls are used, this option is added by default.
 func WithDefaultDecodeOperations() DefaultAndTypeDefaultOption {
