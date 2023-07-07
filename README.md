@@ -1,6 +1,16 @@
 # inreq - Golang http request to struct
 [![GoDoc](https://godoc.org/github.com/RangelReale/inreq?status.png)](https://godoc.org/github.com/RangelReale/inreq)
 
+InReq is a Golang library to extract information from `*http.Request` into structs. It does this using 
+struct tags and/or a configuration map.
+
+It is highly configurable: configurations can be entirely in maps without requiring struct changes, custom decoders 
+can be created, configurations can be overriden on specific calls, a field name mapper can be set, custom type 
+resolvers are available (or the entire type resolving logic can be replaced), the HTTP body can be parsed into 
+a specific field, and much more.
+
+## Examples
+
 ```go
 import (
     "fmt"
@@ -138,6 +148,51 @@ func main() {
     // Form Device Name: form-device-name
 }
 ```
+
+## Default operations
+
+### query
+
+`inreq:"query,name=<query-param-name>,required=true,explode=false,explodesep=,"`
+
+- name: the query parameter name to get from `req.URL.Query().Get()`. Default uses `FieldNameMapper`, which by default uses `strings.ToLower`.
+- required: whether the query parameter is required to exist. Default is true.
+- explode: whether to use `strings.Split` on the query string if the target struct field is a slice. Default is false.
+- explodesep: the separator to use when exploding the string.
+
+### header
+
+`inreq:"header,name=<header-name>,required=true"`
+
+- name: the header name to get from `req.Header.Values()`. Default uses `FieldNameMapper`, which by default uses `strings.ToLower`.
+- required: whether the header is required to exist. Default is true.
+
+### form
+
+`inreq:"form,name=<form-field-name>,required=true"`
+
+- name: the form field name to get from `req.Form.Get()` or `req.MultipartForm.Value`. Default uses `FieldNameMapper`, which by default uses `strings.ToLower`.
+- required: whether the form field is required to exist. Default is true.
+
+### path
+
+`inreq:"path,name=<path-var-name>,required=true"`
+
+A path isn't an HTTP concept, but usually http frameworks have a concept of `routes` which can contain path variables,
+a framework-specific function should be set using `WithPathValue`. Some of these are available a
+[https://github.com/RangelReale/inreq-path](https://github.com/RangelReale/inreq-path).
+
+- name: the path var name to get from `PathValue.GetRequestPath`. Default uses `FieldNameMapper`, which by default uses `strings.ToLower`.
+- required: whether the path var is required to exist. Default is true.
+
+### body
+
+`inreq:"body,required=true,type=json"`
+
+Body unmarshals data into the struct field, usually JSON or XML.
+
+- required: whether an HTTP body required to exist. Default is true.
+- type: type of body to decode. If blank, will use the `Content-Type` header.
 
 # Author
 
