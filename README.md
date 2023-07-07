@@ -202,7 +202,7 @@ Body unmarshals data into the struct field, usually JSON or XML.
 
 `inreq:"recurse"`
 
-This tag is available for field of `struct` type only. Usually structs are not recursed into (otherwise we could
+This tag is available for fields of `struct` type only. Usually structs are not recursed into (otherwise we could
 recurse inside `time.Time`), using this tag the inner struct will be transversed.
 
 ### ignore
