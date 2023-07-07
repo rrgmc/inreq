@@ -198,6 +198,9 @@ Body unmarshals data into the struct field, usually JSON or XML.
 - required: whether an HTTP body required to exist. Default is true.
 - type: type of body to decode. If blank, will use the `Content-Type` header. Should be only a type name ("json", "xml").
 
-# Author
+## Author
+
+The code is based on my other library, [InStruct](https://github.com/RangelReale/instruct), a generic library for
+mapping any data into structs.
 
 Rangel Reale (rangelreale@gmail.com)
