@@ -198,6 +198,19 @@ Body unmarshals data into the struct field, usually JSON or XML.
 - required: whether an HTTP body required to exist. Default is true.
 - type: type of body to decode. If blank, will use the `Content-Type` header. Should be only a type name ("json", "xml").
 
+### recurse
+
+`inreq:"recurse"`
+
+This tag is available for field of `struct` type only. Usually structs are not recursed into (otherwise we could
+recurse inside `time.Time`), using this tag the inner struct will be transversed.
+
+### ignore
+
+`inreq:"-"`
+
+This tag makes the field be ignored.
+
 ## Author
 
 The code is based on my other library, [InStruct](https://github.com/RangelReale/instruct), a generic library for
