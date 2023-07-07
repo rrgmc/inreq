@@ -63,7 +63,7 @@ func decodeBodyRaw(ctx DecodeContext, r *http.Request, field reflect.Value) (boo
 		switch field.Type().Kind() {
 		case reflect.String:
 			rfound, rvalue, rerr := decodeBodyReadData(ctx, r)
-			return true, rfound, rvalue, rerr
+			return true, rfound, string(rvalue), rerr
 		case reflect.Slice:
 			if field.Type().Elem().Kind() == reflect.Uint8 {
 				rfound, rvalue, rerr := decodeBodyReadData(ctx, r)
