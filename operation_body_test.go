@@ -158,7 +158,7 @@ func TestDecodeBody(t *testing.T) {
 			},
 		},
 		{
-			name:            "decode body field to encoding.TextUnmarshaler",
+			name:            "decode body field to encoding.TextUnmarshaler and NOT as primitive type",
 			skipContentType: true,
 			body:            `1.2.3.4`,
 			data: &struct {
