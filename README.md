@@ -4,10 +4,14 @@
 InReq is a Golang library to extract information from `*http.Request` into structs. It does this using 
 struct tags and/or a configuration map.
 
-It is highly configurable: configurations can be entirely in maps without requiring struct changes, custom decoders 
-can be created, configurations can be overriden on specific calls, a field name mapper can be set, custom type 
-resolvers are available (or the entire type resolving logic can be replaced), the HTTP body can be parsed into 
-a specific field, and much more.
+It is highly configurable:
+
+* configurations can be entirely in maps without requiring struct changes
+* custom decoders can be created in addition to the built-in `query`, `header`, `form`, `path` and `body`
+* struct field configurations can be overriden on specific calls
+* configurable field name mapper and body unmarshaler
+* custom type resolvers (or the entire type resolving logic can be replaced)
+* the HTTP body can be parsed into a specific field
 
 ## Examples
 
