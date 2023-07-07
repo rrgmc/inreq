@@ -1,4 +1,4 @@
-# inreq - Golang http request to struct
+# InReq - Golang http request to struct
 [![GoDoc](https://godoc.org/github.com/RangelReale/inreq?status.png)](https://godoc.org/github.com/RangelReale/inreq)
 
 InReq is a Golang library to extract information from `*http.Request` into structs. It does this using 
