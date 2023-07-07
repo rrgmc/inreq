@@ -192,7 +192,7 @@ a framework-specific function should be set using `WithPathValue`. Some of these
 Body unmarshals data into the struct field, usually JSON or XML.
 
 - required: whether an HTTP body required to exist. Default is true.
-- type: type of body to decode. If blank, will use the `Content-Type` header.
+- type: type of body to decode. If blank, will use the `Content-Type` header. Should be only a type name ("json", "xml").
 
 # Author
 
