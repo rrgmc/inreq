@@ -20,8 +20,8 @@ var (
 type DecodeOperationBody struct {
 }
 
-func (d *DecodeOperationBody) Decode(ctx DecodeContext, r *http.Request, field reflect.Value,
-	typ reflect.Type, tag *Tag) (bool, any, error) {
+func (d *DecodeOperationBody) Decode(ctx DecodeContext, r *http.Request, isList bool, field reflect.Value,
+	tag *Tag) (bool, any, error) {
 
 	if r.Body == nil {
 		return false, nil, nil
@@ -31,7 +31,7 @@ func (d *DecodeOperationBody) Decode(ctx DecodeContext, r *http.Request, field r
 		return false, nil, errors.New("body operation not allowed")
 	}
 	if ctx.IsBodyDecoded() {
-		return false, nil, fmt.Errorf("body was already decoded for type '%s'", typ.String())
+		return false, nil, fmt.Errorf("body was already decoded")
 	}
 
 	return decodeBody(ctx, r, field, tag)

@@ -12,8 +12,8 @@ import (
 type DecodeOperationForm struct {
 }
 
-func (d *DecodeOperationForm) Decode(ctx DecodeContext, r *http.Request, field reflect.Value,
-	typ reflect.Type, tag *Tag) (bool, any, error) {
+func (d *DecodeOperationForm) Decode(ctx DecodeContext, r *http.Request, isList bool, field reflect.Value,
+	tag *Tag) (bool, any, error) {
 	var form multipart.Form
 
 	err := r.ParseForm()
@@ -40,7 +40,7 @@ func (d *DecodeOperationForm) Decode(ctx DecodeContext, r *http.Request, field r
 
 	ctx.ValueUsed(OperationForm, tag.Name)
 
-	if field.Kind() == reflect.Slice {
+	if isList {
 		return true, values, nil
 	}
 	return true, values[0], nil

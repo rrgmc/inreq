@@ -11,10 +11,10 @@ import (
 type DecodeOperationPath struct {
 }
 
-func (d *DecodeOperationPath) Decode(ctx DecodeContext, r *http.Request, field reflect.Value,
-	typ reflect.Type, tag *Tag) (bool, any, error) {
+func (d *DecodeOperationPath) Decode(ctx DecodeContext, r *http.Request, isList bool, field reflect.Value,
+	tag *Tag) (bool, any, error) {
 	if ctx.PathValue() == nil {
-		return false, nil, fmt.Errorf("path value function not set for type '%s'", typ.Name())
+		return false, nil, fmt.Errorf("path value function not set")
 	}
 
 	ctx.ValueUsed(OperationPath, tag.Name)

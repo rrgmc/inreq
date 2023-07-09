@@ -12,16 +12,13 @@ import (
 type DecodeOperationQuery struct {
 }
 
-func (d *DecodeOperationQuery) Decode(ctx DecodeContext, r *http.Request, field reflect.Value,
-	typ reflect.Type, tag *Tag) (bool, any, error) {
+func (d *DecodeOperationQuery) Decode(ctx DecodeContext, r *http.Request, isList bool, field reflect.Value,
+	tag *Tag) (bool, any, error) {
 	if !r.URL.Query().Has(tag.Name) {
 		return false, nil, nil
 	}
 
-	// only check slices/arrays for primitive types, otherwise "type UUID [16]byte" would be checked as an array
-	isPrimitive := field.Type().PkgPath() == ""
-
-	if isPrimitive && (field.Kind() == reflect.Slice || field.Kind() == reflect.Array) {
+	if isList {
 		explode, err := tag.Options.BoolValue("explode", false)
 		if err != nil {
 			return false, nil, err
