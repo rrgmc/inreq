@@ -18,7 +18,10 @@ func (d *DecodeOperationQuery) Decode(ctx DecodeContext, r *http.Request, field 
 		return false, nil, nil
 	}
 
-	if field.Kind() == reflect.Slice {
+	// only check slices/arrays for primitive types, otherwise "type UUID [16]byte" would be checked as an array
+	isPrimitive := field.Type().PkgPath() == ""
+
+	if isPrimitive && (field.Kind() == reflect.Slice || field.Kind() == reflect.Array) {
 		explode, err := tag.Options.BoolValue("explode", false)
 		if err != nil {
 			return false, nil, err
