@@ -39,6 +39,8 @@ func (p PathValueFunc) GetRequestPath(r *http.Request, name string) (found bool,
 // BodyDecoder should unmarshal the body into "data".
 // The default one supports JSON and XML.
 type BodyDecoder interface {
+	// Unmarshal should unmarshal r.Body into data. If r.Body is read, "ctx.DecodedBody()" MUST be called
+	// even if there are read errors.
 	Unmarshal(ctx DecodeContext, typeParam string, r *http.Request, data any) (bool, any, error)
 }
 

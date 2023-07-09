@@ -42,13 +42,13 @@ func decodeBodyReadData(ctx DecodeContext, r *http.Request) (bool, []byte, error
 		return true, nil, fmt.Errorf("body was already decoded")
 	}
 
+	ctx.DecodedBody() // signal that the body was decoded
+
 	b, err := io.ReadAll(r.Body)
 	if err != nil {
 		return true, nil, err
 	}
 	defer r.Body.Close()
-
-	ctx.DecodedBody() // signal that the body was decoded
 
 	if len(b) == 0 {
 		return false, nil, nil
@@ -149,12 +149,14 @@ func (d defaultBodyDecoder) Unmarshal(ctx DecodeContext, typeParam string, r *ht
 
 	switch mediaType {
 	case "application/json":
+		ctx.DecodedBody()
 		err := json.NewDecoder(r.Body).Decode(&data)
 		if err != nil {
 			return true, nil, fmt.Errorf("error parsing JSON body: %w", err)
 		}
 		return true, IgnoreDecodeValue, nil
 	case "text/xml", "application/xml":
+		ctx.DecodedBody()
 		err := xml.NewDecoder(r.Body).Decode(&data)
 		if err != nil {
 			return true, nil, fmt.Errorf("error parsing XML body: %w", err)
