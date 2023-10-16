@@ -3,8 +3,8 @@ package inreq
 import (
 	"net/http"
 
-	"github.com/RangelReale/instruct"
-	inoptions "github.com/RangelReale/instruct/options"
+	"github.com/rrgmc/instruct"
+	inoptions "github.com/rrgmc/instruct/options"
 )
 
 // Decoder decodes http requests to structs.

@@ -1,7 +1,7 @@
 package resolver
 
 import (
-	"github.com/RangelReale/instruct/resolver"
+	"github.com/rrgmc/instruct/resolver"
 )
 
 // ValueResolver resolves simple types for a Resolver.

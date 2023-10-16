@@ -3,7 +3,7 @@ package inreq
 import (
 	"net/http"
 
-	"github.com/RangelReale/instruct"
+	"github.com/rrgmc/instruct"
 )
 
 const (

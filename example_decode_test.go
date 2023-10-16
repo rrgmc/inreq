@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/RangelReale/inreq"
+	"github.com/rrgmc/inreq"
 )
 
 type InputBody struct {
@@ -39,7 +39,7 @@ func ExampleDecode() {
 	data := &Input{}
 
 	err = inreq.Decode(r, data,
-		// usually this will be a framework-specific implementation, like "github.com/RangelReale/inreq-path/gorillamux".
+		// usually this will be a framework-specific implementation, like "github.com/rrgmc/inreq-path/gorillamux".
 		inreq.WithPathValue(inreq.PathValueFunc(func(r *http.Request, name string) (found bool, value any, err error) {
 			if name == "deviceid" {
 				return true, "12345", err

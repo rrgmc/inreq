@@ -1,5 +1,5 @@
 # InReq - Golang http request to struct
-[![GoDoc](https://godoc.org/github.com/RangelReale/inreq?status.png)](https://godoc.org/github.com/RangelReale/inreq)
+[![GoDoc](https://godoc.org/github.com/rrgmc/inreq?status.png)](https://godoc.org/github.com/rrgmc/inreq)
 
 InReq is a Golang library to extract information from `*http.Request` into structs. It does this using 
 struct tags and/or a configuration map.
@@ -21,7 +21,7 @@ import (
     "net/http"
     "strings"
 
-    "github.com/RangelReale/inreq"
+    "github.com/rrgmc/inreq"
 )
 
 type InputBody struct {
@@ -55,7 +55,7 @@ func main() {
     data := &Input{}
 
     err = inreq.Decode(r, data,
-        // usually this will be a framework-specific implementation, like "github.com/RangelReale/inreq-path/gorillamux".
+        // usually this will be a framework-specific implementation, like "github.com/rrgmc/inreq-path/gorillamux".
         inreq.WithPathValue(inreq.PathValueFunc(func(r *http.Request, name string) (found bool, value any, err error) {
             if name == "deviceid" {
                 return true, "12345", err
@@ -92,7 +92,7 @@ import (
     "net/http"
     "strings"
 
-    "github.com/RangelReale/inreq"
+    "github.com/rrgmc/inreq"
 )
 
 type InputTypeBody struct {
@@ -124,7 +124,7 @@ func main() {
     r.Form.Add("devicename", "form-device-name")
 
     data, err := inreq.DecodeType[InputType](r,
-        // usually this will be a framework-specific implementation, like "github.com/RangelReale/inreq-path/gorillamux".
+        // usually this will be a framework-specific implementation, like "github.com/rrgmc/inreq-path/gorillamux".
         inreq.WithPathValue(inreq.PathValueFunc(func(r *http.Request, name string) (found bool, value any, err error) {
             if name == "deviceid" {
                 return true, "12345", err
@@ -184,7 +184,7 @@ func main() {
 
 A path isn't an HTTP concept, but usually http frameworks have a concept of `routes` which can contain path variables,
 a framework-specific function should be set using `WithPathValue`. Some of these are available a
-[https://github.com/RangelReale/inreq-path](https://github.com/RangelReale/inreq-path).
+[https://github.com/rrgmc/inreq-path](https://github.com/rrgmc/inreq-path).
 
 - name: the path var name to get from `PathValue.GetRequestPath`. Default uses `FieldNameMapper`, which by default uses `strings.ToLower`.
 - required: whether the path var is required to exist. Default is true.
@@ -213,7 +213,7 @@ This tag makes the field be ignored.
 
 ## Author
 
-The code is based on my other library, [InStruct](https://github.com/RangelReale/instruct), a generic library for
+The code is based on my other library, [InStruct](https://github.com/rrgmc/instruct), a generic library for
 mapping any data into structs.
 
 Rangel Reale (rangelreale@gmail.com)

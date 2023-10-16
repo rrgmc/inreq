@@ -1,8 +1,8 @@
 package inreq
 
 import (
-	"github.com/RangelReale/instruct"
-	"github.com/RangelReale/instruct/types"
+	"github.com/rrgmc/instruct"
+	"github.com/rrgmc/instruct/types"
 )
 
 // error.go

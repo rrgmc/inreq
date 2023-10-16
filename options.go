@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"reflect"
 
-	"github.com/RangelReale/instruct"
+	"github.com/rrgmc/instruct"
 )
 
 // WithTagName sets the tag name to check on structs. The default is "inreq".

@@ -1,6 +1,6 @@
 package inreq
 
-import "github.com/RangelReale/instruct"
+import "github.com/rrgmc/instruct"
 
 // DecodeContext is the context sent to DecodeOperation.
 type DecodeContext interface {
