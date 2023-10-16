@@ -1,0 +1,32 @@
+version: '3'
+
+tasks:
+  current-version:
+    cmds:
+      - 'echo "Version: {{.GIT_TAG_CURRENT}}"'
+    silent: true
+    vars:
+      GIT_TAG_CURRENT:
+        sh: 'git describe --tags --abbrev=0'
+  release-version:
+    cmds:
+      - 'echo "Version: {{.GIT_TAG_CURRENT}} => {{.VERSION}}"'
+      - task: release-version-internal
+    vars:
+      GIT_TAG_CURRENT:
+        sh: 'git describe --tags --abbrev=0'
+    requires:
+      vars: [VERSION]
+    preconditions:
+      - sh: 'test -z "$(git status --porcelain)"'
+        msg: 'there are uncommited git changes'
+    silent: true
+  release-version-internal:
+    internal: true
+    prompt: "Creating and pushing tag {{.VERSION}}. Are you sure?"
+    cmds:
+      - 'git tag {{.VERSION}}'
+      - 'git push --tags'
+    requires:
+      vars: [VERSION]
+    silent: true
